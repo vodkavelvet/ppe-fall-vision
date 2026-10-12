@@ -490,6 +490,142 @@ def track(
     )
 
 
+@app.command()
+def features(
+    source: Optional[str] = typer.Option(None, "--source", "-s"),
+    clip_ref: Optional[str] = typer.Option(
+        None, "--clip", help='Klip CAUCAFall, mis. "Subject.3/Fall forward".'
+    ),
+    dataset_root: Path = typer.Option(
+        Path("Dataset CAUCAFall/CAUCAFall"), "--dataset-root", envvar="PFV_DATASET_ROOT"
+    ),
+    config: Optional[Path] = typer.Option(None, "--config", "-c", exists=True, dir_okay=False),
+    max_frames: Optional[int] = typer.Option(None, "--max-frames", min=1),
+    window: bool = typer.Option(True, "--window/--no-window"),
+) -> None:
+    """Tampilkan nilai fitur deteksi jatuh secara langsung.
+
+    Demo Task 5. Belum ada keputusan jatuh di sini; itu Task 6. Gunanya melihat
+    fitur mana yang bergerak untuk gerakan apa.
+
+    Coba dengan webcam: berdiri, jongkok, berlutut, lalu membungkuk mengambil
+    sesuatu. Perhatikan bahwa ``trunk_angle`` nyaris tidak bergerak saat Anda
+    membungkuk ke arah kamera, sementara ``hip_ankle`` dan ``trunk_len`` bergerak.
+    Itu temuan utama proyek ini, terlihat langsung.
+    """
+    from pfv.draw import draw_pose, draw_text
+    from pfv.fall import compute_static, compute_temporal
+    from pfv.perception.yolo_pose import YoloPoseEstimator
+    from pfv.tracking import PersonTracker
+
+    cfg = load_config(config, **{"video.source": source})
+    flags: Optional[list] = None
+    try:
+        if clip_ref:
+            from pfv.data.caucafall import NATIVE_FPS, load_clip
+
+            loaded = load_clip(Path(dataset_root) / clip_ref)
+            flags = loaded.fall_flags
+            frames_source = ImageSequenceSource(
+                loaded.image_paths, fps=NATIVE_FPS, resize=cfg.video.resize
+            )
+            fps = NATIVE_FPS
+            typer.echo(f"{loaded.clip_id} | onset: {loaded.fall_onset()}")
+        else:
+            frames_source = VideoSource(
+                cfg.video.source, frame_skip=cfg.video.frame_skip,
+                resize=cfg.video.resize, loop=cfg.video.loop,
+            )
+            fps = frames_source.declared_fps or 20.0
+            typer.echo(frames_source.describe())
+    except (VideoSourceError, RuntimeError) as exc:
+        typer.secho(f"Gagal: {exc}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1)
+
+    estimator = YoloPoseEstimator(
+        model=cfg.pose.model, models_dir=cfg.pose.models_dir, device=cfg.pose.device,
+        conf=cfg.pose.conf, keypoint_conf=cfg.pose.keypoint_conf, imgsz=cfg.pose.imgsz,
+    )
+    estimator.load()
+    t = cfg.tracking
+    tracker = PersonTracker(
+        fps=fps, window_s=t.window_s,
+        track_activation_threshold=t.track_activation_threshold,
+        lost_track_buffer=t.lost_track_buffer,
+        minimum_matching_threshold=t.minimum_matching_threshold,
+        minimum_consecutive_frames=t.minimum_consecutive_frames,
+        prune_after_s=t.prune_after_s,
+    )
+
+    # Nama pendek supaya overlay tetap terbaca.
+    shown = (
+        ("aspect", "bbox_aspect_ratio", "{:5.2f}"),
+        ("angle", "trunk_angle_deg", "{:5.1f}"),
+        ("trunk_len", "trunk_length_norm", "{:5.3f}"),
+        ("hip_knee", "hip_knee_dy_norm", "{:5.3f}"),
+        ("hip_ankle", "hip_ankle_dy_norm", "{:5.3f}"),
+        ("head_hip", "head_hip_dy_norm", "{:5.3f}"),
+        ("spread_y", "keypoint_spread_y_norm", "{:5.3f}"),
+        ("hip_vel", "hip_velocity_norm", "{:+5.2f}"),
+        ("angle_rate", "trunk_angle_rate", "{:+5.1f}"),
+        ("motion", "motion_energy", "{:5.3f}"),
+    )
+    n_complete = 0
+    interrupted = False
+
+    try:
+        for frame in frames_source:
+            tracked = tracker.update(estimator.estimate(frame.image), frame)
+            for person in tracked:
+                state = tracker.state(person.track_id)
+                static = compute_static(person.pose)
+                temporal = compute_temporal(state, max_gap_s=t.max_gap_s)
+                values = static.as_dict()
+                values.update(temporal.as_dict())
+                if static.n_available == 7:
+                    n_complete += 1
+
+                draw_pose(frame.image, person.pose, label=person.label)
+                for row, (label, key, fmt) in enumerate(shown):
+                    value = values.get(key)
+                    text = fmt.format(value) if value is not None else "    -"
+                    draw_text(
+                        frame.image,
+                        f"{label:>10s} {text}",
+                        (10, 100 + row * 20),
+                        (0, 255, 0) if value is not None else (120, 120, 120),
+                        scale=0.5,
+                    )
+                if not temporal.contiguous:
+                    draw_text(frame.image, "RIWAYAT BERLUBANG", (10, 320), (0, 165, 255), 0.5)
+
+            _draw_overlay(frame, None, frames_source.declared_fps)
+            if flags is not None:
+                _draw_ground_truth(frame, flags[frame.index], "ground truth")
+
+            if window:
+                cv2.imshow("pfv features", frame.image)
+                if (cv2.waitKey(1) & 0xFF) in _QUIT_KEYS:
+                    interrupted = True
+                    break
+            if max_frames is not None and frames_source.frames_yielded >= max_frames:
+                break
+    except KeyboardInterrupt:
+        interrupted = True
+    finally:
+        frames_source.release()
+        if window:
+            cv2.destroyAllWindows()
+
+    total = frames_source.frames_yielded
+    typer.echo(
+        f"{total} frame | fitur lengkap (7/7): "
+        f"{100.0 * n_complete / total:.0f}%" if total else "0 frame"
+    )
+    if interrupted:
+        typer.echo("dihentikan pengguna")
+
+
 def _draw_ground_truth(frame: Frame, is_fall: bool, activity: str) -> None:
     """Tandai apakah frame ini berada dalam periode tergeletak menurut label."""
     w, h = frame.size

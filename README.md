@@ -19,7 +19,12 @@ dan ground truth evaluasi.
 waktu (`pfv track`). Ambang pencocokan 0,95 dipilih dari pengukuran atas 100 klip;
 lihat `data/DATASETS.md`. Pertukaran ID antar orang belum teruji pada data nyata.
 
-Belum ada deteksi jatuh dan PPE; itu mulai Task 5.
+**Task 5 selesai** — fitur deteksi jatuh sebagai fungsi murni (`pfv features`).
+Tujuh fitur per frame dan tiga fitur temporal, semuanya mengembalikan `None` bila
+data tidak memadai. Daya pisah dan ketersediaan tiap fitur sudah diukur per
+subjek; lihat `data/DATASETS.md`.
+
+Belum ada keputusan jatuh (state machine) dan belum ada PPE; itu Task 6 dan 8.
 
 ```bash
 # Audit bundel apa adanya (read-only)

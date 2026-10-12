@@ -15,6 +15,7 @@ bekerja.
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Tuple
 
 import cv2
 import numpy as np
@@ -80,13 +81,33 @@ def standing_keypoints(
     kp[Keypoint.NOSE] = (x, top + height * 0.08, conf)
     kp[Keypoint.LEFT_KNEE] = (x - 9, top + height * 0.78, conf)
     kp[Keypoint.RIGHT_KNEE] = (x + 9, top + height * 0.78, conf)
+    kp[Keypoint.LEFT_ANKLE] = (x - 9, top + height * 0.97, conf)
+    kp[Keypoint.RIGHT_ANKLE] = (x + 9, top + height * 0.97, conf)
     return kp
+
+
+#: Lebar kotak sebagai fraksi tinggi. Harus proporsional, bukan tetap: kotak
+#: dengan lebar tetap membuat rasio aspek berubah saat tinggi diubah, sehingga
+#: test invariansi skala gagal karena fixture-nya, bukan karena fiturnya.
+_BBOX_WIDTH_RATIO = 0.1875  # menghasilkan lebar 30 pada tinggi 160
+
+
+def standing_bbox(
+    *, x: float = 100.0, top: float = 50.0, height: float = 160.0
+) -> Tuple[float, float, float, float]:
+    """Kotak yang pas untuk :func:`standing_keypoints`."""
+    half_w = height * _BBOX_WIDTH_RATIO / 2.0
+    return (x - half_w, top, x + half_w, top + height)
 
 
 def lying_keypoints(
     *, y: float = 300.0, left: float = 100.0, width: float = 160.0, conf: float = 0.9
 ) -> np.ndarray:
-    """Keypoint orang TERGELETAK: bahu dan pinggul sejajar horizontal."""
+    """Keypoint orang TERGELETAK menyamping: bahu dan pinggul sejajar horizontal.
+
+    Semua anggota badan berada pada ketinggian yang sama, yaitu lantai. Itu yang
+    membuat ``hip_ankle_dy`` mendekati nol.
+    """
     kp = np.zeros((N_KEYPOINTS, 3), dtype=np.float32)
     shoulder_x = left + width * 0.25
     hip_x = left + width * 0.60
@@ -95,6 +116,78 @@ def lying_keypoints(
     kp[Keypoint.LEFT_HIP] = (hip_x, y - 8, conf)
     kp[Keypoint.RIGHT_HIP] = (hip_x, y + 8, conf)
     kp[Keypoint.NOSE] = (left + width * 0.08, y, conf)
-    kp[Keypoint.LEFT_KNEE] = (left + width * 0.85, y - 8, conf)
-    kp[Keypoint.RIGHT_KNEE] = (left + width * 0.85, y + 8, conf)
+    kp[Keypoint.LEFT_KNEE] = (left + width * 0.82, y - 8, conf)
+    kp[Keypoint.RIGHT_KNEE] = (left + width * 0.82, y + 8, conf)
+    kp[Keypoint.LEFT_ANKLE] = (left + width * 0.97, y - 6, conf)
+    kp[Keypoint.RIGHT_ANKLE] = (left + width * 0.97, y + 6, conf)
     return kp
+
+
+def lying_bbox(
+    *, y: float = 300.0, left: float = 100.0, width: float = 160.0
+) -> Tuple[float, float, float, float]:
+    """Kotak yang pas untuk :func:`lying_keypoints`: lebar dan pendek."""
+    return (left, y - 14.0, left + width, y + 14.0)
+
+
+def bending_keypoints(
+    *, x: float = 100.0, top: float = 50.0, height: float = 160.0, conf: float = 0.9
+) -> np.ndarray:
+    """Keypoint orang MEMBUNGKUK mengambil objek.
+
+    Ini pengganggu utama untuk jatuh ke depan: kepala turun mendekati pinggul
+    sehingga ``head_hip_dy`` kecil, tetapi kaki tetap di lantai dan pinggul tetap
+    tinggi sehingga ``hip_ankle_dy`` tetap besar. Itulah yang membedakannya dari
+    tergeletak.
+    """
+    kp = np.zeros((N_KEYPOINTS, 3), dtype=np.float32)
+    hip_y = top + height * 0.55
+    kp[Keypoint.LEFT_SHOULDER] = (x - 12, top + height * 0.40, conf)
+    kp[Keypoint.RIGHT_SHOULDER] = (x + 12, top + height * 0.40, conf)
+    kp[Keypoint.LEFT_HIP] = (x - 9, hip_y, conf)
+    kp[Keypoint.RIGHT_HIP] = (x + 9, hip_y, conf)
+    # Kepala turun sampai sedikit di bawah pinggul.
+    kp[Keypoint.NOSE] = (x + 20, hip_y + 6, conf)
+    kp[Keypoint.LEFT_KNEE] = (x - 9, top + height * 0.78, conf)
+    kp[Keypoint.RIGHT_KNEE] = (x + 9, top + height * 0.78, conf)
+    kp[Keypoint.LEFT_ANKLE] = (x - 9, top + height * 0.97, conf)
+    kp[Keypoint.RIGHT_ANKLE] = (x + 9, top + height * 0.97, conf)
+    return kp
+
+
+def forward_fall_keypoints(
+    *, x: float = 100.0, y: float = 300.0, extent: float = 45.0, conf: float = 0.9
+) -> np.ndarray:
+    """Keypoint orang TERGELETAK searah sumbu kamera (jatuh ke depan).
+
+    Mereproduksi mode kegagalan yang terukur pada CAUCAFall. Tubuh mengarah ke
+    atau menjauhi kamera, sehingga di bidang gambar ia MEMENDEK alih-alih
+    melebar:
+
+    * sudut trunk tetap kecil, jadi fitur sudut tidak bergerak
+    * panjang trunk menyusut tajam, jadi fitur panjang yang menangkapnya
+    * pinggul, lutut, dan pergelangan kaki berada pada ketinggian berdekatan
+    """
+    kp = np.zeros((N_KEYPOINTS, 3), dtype=np.float32)
+    kp[Keypoint.LEFT_SHOULDER] = (x - 14, y, conf)
+    kp[Keypoint.RIGHT_SHOULDER] = (x + 14, y, conf)
+    kp[Keypoint.LEFT_HIP] = (x - 10, y + extent * 0.33, conf)
+    kp[Keypoint.RIGHT_HIP] = (x + 10, y + extent * 0.33, conf)
+    kp[Keypoint.NOSE] = (x, y - extent * 0.18, conf)
+    kp[Keypoint.LEFT_KNEE] = (x - 10, y + extent * 0.55, conf)
+    kp[Keypoint.RIGHT_KNEE] = (x + 10, y + extent * 0.55, conf)
+    kp[Keypoint.LEFT_ANKLE] = (x - 10, y + extent * 0.67, conf)
+    kp[Keypoint.RIGHT_ANKLE] = (x + 10, y + extent * 0.67, conf)
+    return kp
+
+
+def forward_fall_bbox(
+    *, x: float = 100.0, y: float = 300.0, extent: float = 45.0
+) -> Tuple[float, float, float, float]:
+    """Kotak yang pas untuk :func:`forward_fall_keypoints`: hampir persegi.
+
+    Rasio aspeknya mendekati 1, bukan jauh di bawah 1 seperti tergeletak
+    menyamping. Itu sebabnya rasio aspek gagal memisahkan kasus ini.
+    """
+    half_w = extent * 0.556  # menghasilkan lebar 50 pada extent 45
+    return (x - half_w, y - extent * 0.22, x + half_w, y + extent * 0.78)

@@ -264,6 +264,68 @@ berhenti, dengan angka identik di ambang 0,80 sampai 0,99. Artinya tidak ada
 bukti 0,95 menambah risiko, tetapi ini bukan bukti aman: adegannya ideal dan
 tidak membedakan ambang. Validasi dengan Multiple Cameras Fall sebelum Task 9.
 
+#### Daya pisah fitur, diukur PER SUBJEK
+
+Angka agregat di atas tidak cukup untuk diklaim, karena margin bisa berasal dari
+beberapa subjek saja. Tabel ini menghitung per subjek: median frame tergeletak
+harus lebih rendah dari median ADL **milik subjek yang sama** (perbandingan antar
+subjek tidak sah karena tinggi badan dan jarak kamera berbeda).
+
+Skrip: `scripts/analyse_per_subject.py`, `scripts/analyse_candidates.py`, dan
+`scripts/validate_features.py` yang mengulang pengukuran lewat kode produksi
+`pfv.fall.features` dan menghasilkan angka identik.
+
+| Fitur | Menyamping / belakang | Searah kamera (ke depan) |
+|---|---|---|
+| `keypoint_spread_y_norm` | **10/10** | 6/10 |
+| `bbox_aspect_ratio` | 9–10/10 | **3/10** |
+| `hip_ankle_dy_norm` | 9–10/10 | **7/10** |
+| `trunk_angle_deg` | 9–10/10 | **3/10** |
+| `hip_knee_dy_norm` | 7–10/10 | 6/10 |
+| `trunk_length_norm` | **4/10** | **7/10** |
+| `head_hip_dy_norm` | 7–9/10 | 4/10 |
+
+**Temuan utamanya: tidak ada satu fitur yang bekerja untuk semua arah jatuh.**
+`trunk_angle_deg`, fitur paling umum di literatur deteksi jatuh berbasis
+skeleton, hanya benar untuk 3 dari 10 subjek pada jatuh searah sumbu kamera.
+Sebaliknya `trunk_length_norm` justru buruk untuk jatuh menyamping (4/10) tetapi
+menjadi salah satu yang terbaik untuk searah kamera. Keduanya saling melengkapi,
+bukan saling menggantikan.
+
+**Kombinasi menutup lebih banyak.** Untuk jatuh ke depan, `trunk_length_norm`,
+`hip_knee_dy_norm`, dan `hip_ankle_dy_norm` gagal pada subjek yang BERBEDA.
+Disjungsinya menutup **9 dari 10** subjek; hanya Subject.8 gagal di ketiganya dan
+layak diperiksa visual. Ini bukan klasifier — ambang sesungguhnya dicari Task 7b,
+dan Task 6 menambahkan `persistence` yang kemungkinan menutup sisanya.
+
+#### Ketersediaan fitur
+
+Diukur dengan `scripts/measure_availability.py`.
+
+| Fitur | Tegak | Tergeletak | Selisih |
+|---|---|---|---|
+| `bbox_aspect_ratio` | 100% | 100% | +0% |
+| `keypoint_spread_y_norm` | 100% | 100% | −0% |
+| `trunk_angle_deg` | 100% | 97% | −2% |
+| `trunk_length_norm` | 100% | 97% | −2% |
+| `hip_knee_dy_norm` | 99% | 98% | −1% |
+| `hip_ankle_dy_norm` | 92% | 95% | **+3%** |
+| **`head_hip_dy_norm`** | **73%** | **58%** | **−15%** |
+
+Hanya `head_hip_dy_norm` yang sering hilang, karena hidung tidak selalu
+terdeteksi. Fitur itu sekaligus yang paling lemah daya pisahnya (4/10 untuk jatuh
+ke depan), jadi Task 6 sebaiknya tidak bergantung padanya. Semua fitur lain
+tersedia 92 persen ke atas, dan `hip_ankle_dy_norm` justru LEBIH sering tersedia
+saat orang tergeletak.
+
+#### Keputusan normalisasi
+
+Semua fitur jarak dibagi **diagonal kotak**, bukan tingginya. Tinggi kotak ikut
+runtuh saat orang tergeletak, sehingga memakainya sebagai pembagi akan
+menyembunyikan justru efek yang dicari. Pada pose tergeletak sintetis,
+normalisasi dengan tinggi menghasilkan nilai di atas 1,5 yang kehilangan makna,
+sementara dengan diagonal tetap di bawah 0,5. Dikunci oleh test.
+
 ## Validasi saja — tidak dilatih
 
 ### Hard Hat Workers
