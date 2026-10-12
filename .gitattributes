@@ -1,0 +1,13 @@
+# Normalisasi akhir baris supaya diff bersih lintas Mac, Windows, dan Colab.
+* text=auto
+
+# Script shell HARUS LF. Berakhir CRLF (checkout di Windows) membuat `sh` gagal
+# dengan galat yang membingungkan seperti "command not found: \r".
+*.sh text eol=lf
+
+# Berkas biner: jangan diubah akhir barisnya.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.npz binary
+*.pt binary

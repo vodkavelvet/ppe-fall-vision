@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools==75.3.2", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ppe-fall-vision"
+version = "0.1.0"
+description = "PPE compliance and fall detection from video using object detection + pose estimation"
+readme = "README.md"
+# Batas bawah 3.10, bukan 3.14. Alasannya bukan kompromi: image Kaggle memakai
+# Python sendiri (saat ini 3.11), dan kode yang sama harus jalan di sana tanpa
+# cabang khusus. Lokal memakai 3.14.7, lihat .python-version.
+requires-python = ">=3.10"
+
+# Versi dipin EKSAK. Alasan: bobot model dan hasil evaluasi harus reproducible,
+# dan kernel Kaggle berjalan headless sehingga kegagalan resolusi dependensi
+# baru terlihat setelah run selesai.
+dependencies = [
+    "numpy==2.5.3",
+    "opencv-python==5.0.0.93",
+    "pydantic==2.13.5",
+    "pydantic-settings==2.15.0",
+    "PyYAML==6.0.3",
+    "typer==0.27.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==9.1.1",
+]
+
+# Dipasang mulai Task 3. Versi di bawah SUDAH diverifikasi pada Python 3.14.7
+# arm64: ketiganya terpasang bersama tanpa konflik, `torch.backends.mps` aktif,
+# dan matmul di device "mps" berhasil. Dicatat di sini supaya Task 3 tidak perlu
+# menebak ulang kombinasi yang cocok.
+#
+# Ultralytics berlisensi AGPL-3.0: aman untuk riset dan penggunaan internal,
+# menular bila produknya didistribusikan. Karena itu detector berada di belakang
+# Protocol (src/pfv/perception/base.py) supaya bisa ditukar ke alternatif
+# Apache-2.0 seperti RTMPose/MMPose atau YOLOX tanpa mengubah pipeline.
+perception = [
+    "torch==2.14.0",
+    "torchvision==0.29.0",
+    "ultralytics==8.4.163",
+    "supervision==0.30.5",
+]
+
+[project.scripts]
+pfv = "pfv.cli:app"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

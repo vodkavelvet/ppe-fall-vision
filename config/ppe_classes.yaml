@@ -1,0 +1,75 @@
+# Skema kelas PPE. Diisi lengkap di Task 13a setelah audit SH17.
+#
+# KEPUTUSAN TERKUNCI: hanya 3 kelas yang dilatih. Kelas `person` TIDAK ada
+# di sini -- orang datang dari model pose (pretrained COCO), supaya hanya ada
+# SATU sumber kotak orang.
+
+names:
+  0: helmet   # kepala YANG memakai hardhat
+  1: head     # kepala TANPA hardhat -> bukti positif pelanggaran
+  2: vest     # hi-vis vest atau safety suit di badan
+
+# Pemetaan dari dataset sumber ke 3 kelas di atas.
+# BELUM DIVERIFIKASI: ID kelas sebenarnya harus dibaca dari data.yaml dataset
+# Kaggle, BUKAN dari daftar bernomor 1-17 di README SH17. Salah indeks berarti
+# seluruh pemetaan melenceng. Diverifikasi di Task 13a.
+source_mapping:
+  sh17:
+    # `Head` di SH17 kemungkinan besar berarti SEMUA kepala (termasuk berhelm),
+    # karena ini dataset bagian tubuh. Jadi kelas negatif DITURUNKAN:
+    #   Head tanpa Helmet yang overlap -> head
+    #   Head dengan Helmet yang overlap -> helmet
+    # WAJIB diverifikasi visual di Task 13a sebelum dipakai.
+    derive_negative: true
+    head_class: Head
+    helmet_class: Helmet
+    containment_iou: 0.5        # dikalibrasi di Task 13a
+
+    # Safety-suit HARUS ikut. Tanpa ini, pekerja bercoverall hi-vis penuh badan
+    # akan dilaporkan tidak pakai vest -- false positive yang mudah terlewat.
+    vest_equivalent: [Safety-vest, Safety-suit]
+
+    drop:
+      - Person          # orang dari model pose, bukan dari sini
+      - Face
+      - Glasses
+      - Face-mask-medical
+      - Face-guard
+      - Ear
+      - Earmuffs
+      - Hands
+      - Gloves
+      - Foot
+      - Shoes
+      - Tools
+      - Medical-suit
+
+  hard_hat_workers_v5:
+    # Semantik `head` di dataset ini SUDAH benar = tanpa helm, jadi tidak
+    # perlu derivasi. Tidak ada kelas vest. Hanya untuk VALIDASI.
+    derive_negative: false
+    head_class: head
+    helmet_class: helmet
+    vest_equivalent: []
+    drop: []
+
+# Pemeriksaan kepatuhan per part. Digerakkan config, BUKAN field tetap di kode,
+# supaya menambah part baru (misal masker) nanti murni penambahan entri di sini.
+# Dipakai mulai Task 8.
+ppe_checks:
+  helmet:
+    satisfied_by: [helmet]
+    violated_by: [head]
+    anchor: head_region          # dari keypoint COCO 0-4
+    min_anchor_conf: 0.5
+    require_full_torso: false
+
+  vest:
+    satisfied_by: [vest]
+    # Vest bersifat ASIMETRIS: tidak ada kelas negatif yang bisa dianotasi
+    # konsisten, jadi presence-only. Konsekuensinya akurasi vest akan di bawah
+    # helm, dan status UNKNOWN lebih sering muncul. Itu disengaja.
+    violated_by: []
+    anchor: torso_region         # dari keypoint COCO 5, 6, 11, 12
+    min_anchor_conf: 0.5
+    require_full_torso: true     # torso tidak jelas -> UNKNOWN, bukan VIOLATION

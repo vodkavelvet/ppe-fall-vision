@@ -1,0 +1,102 @@
+# Konfigurasi default ppe-fall-vision.
+# Semua threshold ada di sini, tidak di-hardcode di kode.
+
+video:
+  # "0" = webcam index 0. Bisa juga path file, atau URL rtsp:// / http://.
+  source: "0"
+
+  # Lewati N frame di antara frame yang diproses. 0 = proses semua frame.
+  #
+  # PERINGATAN: frame_skip menurunkan resolusi temporal. Kejadian jatuh
+  # berlangsung 0,5-1 detik, dan fitur hip_vertical_velocity butuh beberapa
+  # frame dalam rentang itu. Kalau fall.enabled = true, biarkan 0 dan hemat
+  # komputasi lewat resize, bukan lewat frame_skip.
+  frame_skip: 0
+
+  resize:
+    # none          -> pakai resolusi asli
+    # longest_side  -> skala seragam sampai sisi terpanjang = longest_side
+    # letterbox     -> skala seragam + padding sampai persis letterbox_size
+    #
+    # TIDAK ADA mode stretch. Menarik frame 720x480 (CAUCAFall, rasio 3:2)
+    # menjadi 640x640 membuat orang gepeng dan merusak bbox_aspect_ratio, yang
+    # merupakan fitur deteksi jatuh. Jadi distorsi aspek dilarang by design.
+    #
+    # CAUCAFall sendiri hanya 720x480, jadi dengan longest_side 960 dan
+    # allow_upscale false, frame-nya lewat tanpa diskalakan.
+    mode: longest_side
+    longest_side: 960
+    letterbox_size: null
+    allow_upscale: false
+
+  # Ulangi video dari awal setelah selesai. Berguna untuk demo.
+  loop: false
+
+fall:
+  enabled: true
+
+  # fps efektif minimum agar fitur kecepatan bermakna. Di bawah ini,
+  # VideoSource memberi peringatan. Lihat Task 7a (pfv doctor).
+  min_fps: 15.0
+
+pose:
+  # Bobot disimpan di models/, bukan di cache tersembunyi Ultralytics, supaya
+  # bisa dilampirkan sebagai berkas biasa ke kernel Kaggle yang tanpa internet.
+  model: yolo11n-pose.pt
+  models_dir: models
+
+  # auto -> coba mps, lalu cuda, lalu cpu. Bisa dipaksa: mps | cuda | cpu.
+  device: auto
+
+  # Ambang confidence deteksi ORANG.
+  conf: 0.25
+
+  # Ambang confidence per KEYPOINT. Di bawahnya keypoint ditandai INVALID,
+  # bukan dibuang dan bukan diganti nol.
+  #
+  # Kalau keypoint pinggul yang hilang diganti (0, 0), trunk_angle akan
+  # menghitung sudut ke sudut kiri-atas frame dan menghasilkan nilai yang
+  # tampak masuk akal padahal tidak berarti apa-apa. Dengan ditandai invalid,
+  # Task 5 mengembalikan None secara jujur dan Task 6 memilih UNKNOWN.
+  #
+  # Diterapkan di luar inference, jadi mengubahnya tidak perlu deteksi ulang.
+  keypoint_conf: 0.5
+
+  imgsz: 640
+
+tracking:
+  # Riwayat per orang, dalam DETIK (bukan frame).
+  window_s: 3.0
+
+  # Parameter ByteTrack. Semuanya diverifikasi diterima oleh supervision 0.30.5.
+  track_activation_threshold: 0.25
+  lost_track_buffer: 30
+  # Nilai LEBIH TINGGI = LEBIH PERMISIF (ambang pada jarak 1-IoU).
+  #
+  # Diukur atas 100 klip CAUCAFall (scripts/measure_id_switches.py), klip dengan
+  # lebih dari satu ID untuk satu orang:
+  #     0.80 (bawaan) : 28/100, 9 perpindahan ID di sekitar onset jatuh
+  #     0.90          : 13/100, 3 di sekitar onset
+  #     0.95          :  7/100, 0 di sekitar onset   <-- dipilih
+  #     0.99          :  6/100, 0 di sekitar onset
+  # Orang yang jatuh mengubah bentuk kotaknya drastis dalam beberapa frame,
+  # sehingga ambang ketat memutus track tepat saat yang paling penting.
+  #
+  # RISIKO PERTUKARAN ID ANTAR ORANG: CAUCAFall hanya berisi SATU orang per frame,
+  # jadi tidak bisa mengujinya. scripts/measure_crossing.py mengujinya dengan dua
+  # orang sintetis (berpapasan, saling menutupi, berhenti): 0% tertukar pada
+  # berpapasan lurus, ~3% pada skenario menutupi/berhenti, dan angkanya IDENTIK di
+  # ambang 0.80 sampai 0.99. Artinya tidak ada bukti 0.95 menambah risiko, tetapi
+  # ini BUKAN bukti aman: adegannya ideal (kotak persegi panjang, gerak lurus)
+  # dan tidak membedakan ambang. Validasi dengan Multiple Cameras Fall sebelum
+  # dipakai pada adegan multi-orang (Task 9).
+  minimum_matching_threshold: 0.95
+  minimum_consecutive_frames: 1
+
+  # Riwayat track yang tak terlihat selama ini dilupakan.
+  prune_after_s: 5.0
+
+  # Jeda terbesar yang masih dianggap riwayat berkesinambungan. Kecepatan yang
+  # melintasi jeda lebih besar tidak boleh dipercaya: tampak seperti gerakan
+  # mendadak, persis pola yang dicari detektor jatuh.
+  max_gap_s: 0.2

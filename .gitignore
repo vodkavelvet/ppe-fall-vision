@@ -1,0 +1,47 @@
+# Secrets -- JANGAN pernah di-commit
+.env
+kaggle.json
+**/kaggle.json
+
+# Data: besar dan berlisensi (CC BY-NC-SA). Tidak masuk repo.
+data/raw/
+data/interim/
+data/processed/
+data/*.zip
+
+# Bundel dataset mentah yang diletakkan di akar repo.
+# CAUCAFall sendiri 7,9 GB. Tanpa baris ini, `git add` akan mencoba melacaknya.
+Dataset CAUCAFall/
+Dataset*/
+*.avi
+
+# Keluaran audit dan laporan (bisa dihasilkan ulang)
+reports/
+
+# Bobot model
+models/*.pt
+models/*.onnx
+models/*.engine
+
+# Output runtime
+events.db
+events.db-*
+clips/
+snapshots/
+runs/
+outputs/
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
+
+# macOS
+.DS_Store
