@@ -326,6 +326,149 @@ menyembunyikan justru efek yang dicari. Pada pose tergeletak sintetis,
 normalisasi dengan tinggi menghasilkan nilai di atas 1,5 yang kehilangan makna,
 sementara dengan diagonal tetap di bawah 0,5. Dikunci oleh test.
 
+#### State machine: pratinjau pada subjek latih (Task 6)
+
+Diputar ulang melalui tracker dan state machine yang sama dengan pipeline nyata
+(`scripts/replay_fall.py`), **hanya subjek latih 1-6**: 30 klip jatuh, 30 klip ADL.
+Ini PRATINJAU, bukan evaluasi. Ambangnya nilai awal, belum dituning (Task 7b).
+
+| Versi | Recall per kejadian | Klip ADL dengan alarm palsu | Latensi median |
+|---|---|---|---|
+| 5 indikator, 2 suara dari 5 | 26/30 (87%) | **5/30** (duduk 3, ambil objek 2) | 2,4 s |
+| **Dua kelompok harus setuju** | **22/30 (73%)** | **0/30** | 2,9 s |
+
+Latensi dihitung dari awal periode tergeletak pada label, bukan dari saat jatuh.
+
+**Kenapa desain berubah.** Versi pertama menghitung lima indikator sebagai suara
+setara dan meminta dua. Pada klip nyata ia gagal dengan dua cara berbeda yang
+berakar pada hal yang sama, yaitu suara yang tidak independen:
+
+* Orang yang **duduk di lantai** memenuhi kedua indikator tinggi anggota badan
+  (`hip_ankle`, `hip_knee`) sekaligus. Itu dua suara untuk satu fakta.
+* Orang yang **membungkuk** mengambil objek memenuhi ketiga indikator orientasi
+  (sudut, sebaran, panjang trunk) tanpa pernah tergeletak.
+
+Perbaikannya prinsipil, bukan ambang yang lebih ketat: tergeletak butuh **kedua
+kelompok** setuju. Duduk gagal di orientasi, membungkuk gagal di tinggi anggota
+badan, dan tergeletak ke arah mana pun memenuhi keduanya.
+
+**Harga yang dibayar, dan ini temuan.** Recall turun 87% menjadi 73%. Dari 8 klip
+yang terlewat, `scripts/explain_misses.py` memisahkan penyebabnya:
+
+| Penyebab | Klip | Bisa diperbaiki ambang? |
+|---|---|---|
+| Struktural: periode tergeletak lebih pendek dari persistence | 3 | Tidak |
+| Pose: orang tidak terdeteksi pada periode tergeletak | 2 | Tidak |
+| Postur: terdeteksi tetapi syarat tidak terpenuhi | 3 | Tidak, lihat di bawah |
+
+**Batas atas recall yang dibuat dataset.** Periode tergeletak pada label hanya
+min 2,15 s dan median 6,95 s. Dengan `persistence_s` 3 s, **4 dari 50 klip (8%)
+tidak mungkin tertangkap** oleh algoritma apa pun, karena klipnya berakhir sebelum
+3 detik. Pada 4 s angkanya 10/50 dan pada 5 s 13/50. Recall di CAUCAFall terbatas
+oleh klip yang dipotong, dan ini harus dilaporkan terpisah dari kinerja algoritma.
+
+**Indikator anggota badan buta untuk sebagian orientasi tergeletak.** Tiga klip
+(`s04_fall_backwards`, `s04_fall_sitting`, `s02_fall_sitting`) ditolak kelompok
+anggota badan padahal orientasi setuju. Nilainya diperiksa: pada `s04_fall_backwards`
+`hip_ankle` median **0,39** dengan confidence kaki **0,90**, nilai yang sama dengan
+orang berdiri (0,40). Pose mendeteksi kaki dengan yakin pada posisi yang salah:
+orang terlentang menghadap kamera menutupi kakinya sendiri dan model menebak posisi
+anatomis normal. Ini bukan soal ambang; nilainya memang sama dengan berdiri.
+**Confidence keypoint tidak membedakan tebakan dari pengamatan.**
+
+**Peringatan metodologi untuk paper.** Pemilihan *fitur* (analisis per subjek di
+atas) memakai data seluruh 10 subjek, termasuk subjek 9-10 yang direncanakan
+sebagai subjek uji. Itu eksplorasi kualitatif, bukan penyetelan ambang, tetapi
+pemeriksa bisa keberatan. Ambang awal dan seluruh pratinjau ini memang hanya dari
+subjek 1-6, dan `replay_fall.py` menolak subjek 7-10 tanpa `--include-heldout`.
+Penawarnya validasi lintas-dataset pada UR Fall dan Multiple Cameras Fall, yang
+tidak pernah dilihat saat memilih fitur.
+
+**Kecepatan turun pinggul terukur lemah** (`scripts/suggest_velocity.py`, subjek
+latih). Puncak kecepatan klip ADL (median +0,49 diagonal/detik) mendekati frame
+sekitar onset jatuh (p90 +0,82). Pada ambang 0,6 hanya 19% frame onset tertangkap
+dan 0,5% frame lain salah terpicu. Karena itu kecepatan hanya petunjuk untuk masuk
+`FALLING`, tidak pernah syarat `FALLEN`: menjadikannya syarat akan melewatkan
+pingsan dan jatuh pelan, yang paling berbahaya.
+
+**Catatan alarm ganda.** Track yang pecah menjadi dua ID (7 dari 100 klip) membuat
+orang yang MASIH tergeletak mendapat mesin baru dan bisa memicu alert kedua.
+Cooldown di sini per track; cooldown berbasis waktu dan posisi dikerjakan Task 9.
+
+#### Task 7b: tuning pada subjek latih dan validasi (subjek uji BELUM dilihat)
+
+Protokol, ditulis di `src/pfv/evaluation/search.py` sebelum ada angka uji:
+
+* **Latih** 1-6 mencari ambang (grid search), **validasi** 7-8 memilih di antara
+  kandidat, **uji** 9-10 dilihat SEKALI oleh `scripts/evaluate_fall.py`.
+* Aturan seleksi: simpan kandidat dengan paling banyak 1 klip ADL beralarm palsu
+  pada subjek latih; simpan yang recall latihnya paling banyak 1 klip di bawah
+  terbaik (banyak konfigurasi hampir bersaing pada 30 klip, membedakannya hanya
+  menyetel derau); urutkan sisanya dengan data validasi.
+* `persistence_s` TIDAK dituning (3 detik untuk semua model), untuk mengurangi
+  derajat kebebasan dan agar perbandingan antar model murni soal cara memutuskan
+  postur.
+* Kriteria gerbang di `eval/gate.yaml`, hasil tuning dibekukan di
+  `eval/frozen_models.json` dengan hash. `evaluate_fall.py` menolak berjalan bila
+  berkas beku berubah, dan menolak kedua kali (`eval/test_runs.jsonl`). Dicatat
+  SEBELUM hasil dicetak, jadi skrip yang macet pun tidak bisa diulang diam-diam.
+* Simulasi cepat atas fitur ter-cache diverifikasi **setara** dengan pipeline
+  nyata: 60 klip subjek latih, nol perbedaan (`scripts/check_equivalence.py`).
+
+Lima model dituning dengan prosedur sama dan dijalankan melalui state machine,
+persistence, dan cooldown yang SAMA, sehingga yang berbeda hanya cara memutuskan
+'tergeletak': rasio aspek saja, sudut trunk saja, sudut ATAU rasio aspek (gabungan
+dua fitur paling umum di literatur), orientasi saja (ablasi kelompok anggota
+badan), dan model penuh.
+
+Hasil pada data yang dipakai untuk menyetel (BUKAN angka evaluasi, dan optimistis
+karena ambangnya dipilih dari data ini):
+
+| Model | Latih: recall | Latih: alarm palsu | Validasi: recall | Validasi: alarm palsu |
+|---|---|---|---|---|
+| rasio aspek saja | 19/30 | 0/30 | 8/10 | 1/10 |
+| sudut trunk saja | **11/30** | 1/30 | 8/10 | 0/10 |
+| sudut ATAU rasio aspek | 19/30 | 1/30 | 8/10 | 1/10 |
+| orientasi saja | 19/30 | 1/30 | 8/10 | 1/10 |
+| **model penuh** | **25/30** | 1/30 | 9/10 | 1/10 |
+
+Sudut trunk saja hanya 11/30 pada data latih, konsisten dengan temuan bahwa fitur
+itu hanya benar untuk 3 dari 10 subjek pada jatuh searah kamera. Ini mendukung
+klaim utama, **tetapi hanya sebagai indikasi**: ambang tiap model dipilih dari data
+yang sama yang dilaporkan di sini.
+
+**Catatan yang harus dibaca bersama tabel.**
+
+* Tiga ambang model penuh jatuh di TEPI grid (`keypoint_spread_y_max` 0,45 = nilai
+  terendah, `hip_ankle_dy_max` 0,34 dan `trunk_length_max` 0,28 = nilai tertinggi).
+  Optimum sebenarnya mungkin di luar grid. Kemungkinan besar batas satu alarm palsu
+  pada subjek latih yang mengikat, bukan grid yang terlalu sempit, tetapi belum
+  diperiksa. Memperluas grid sekarang masih sah (subjek uji belum dilihat), dengan
+  risiko menyetel berlebihan ke 10 klip validasi.
+* 412 dari 432 kandidat model penuh lolos batas alarm palsu latih, dan shortlist
+  berisi 56. Validasi hanya 20 klip, jadi pilihan akhir di antara 56 kandidat itu
+  sebagian besar derau.
+* Validasi hanya 10 klip jatuh dan 10 klip ADL; satu klip menggeser angka 10 poin.
+
+**Metrik yang dipakai, dan yang sengaja tidak.** Alarm palsu dilaporkan sebagai
+proporsi KLIP ADL (dengan interval Wilson), bukan 'per jam'. Seluruh ADL hanya 8,6
+menit, jadi satu alarm palsu berekstrapolasi menjadi ~7 per jam dan nol alarm palsu
+hanya membuktikan 'kurang dari ~7 per jam'. Recall dilaporkan dua kali: mentah, dan
+atas klip yang secara struktural MUNGKIN tertangkap (periode tergeletak minimal
+persistence + 0,5 detik). Target awal 'recall 90 persen' dan '1 alarm palsu per jam'
+diganti di `eval/gate.yaml` karena alasan itu.
+
+#### Task 7a: `pfv doctor`
+
+Memeriksa kelayakan sebuah sumber. **Hanya pemeriksaan fps yang berdasar
+pengukuran** (jatuh berlangsung 0,5-1 detik; di bawah ~15 fps hanya ada 3-5 frame).
+Ambang lain (tinggi orang minimal 15 persen frame, deteksi 80 persen, torso 80
+persen, rasio tinggi/lebar median minimal 1,5) adalah HEURISTIK yang dikalibrasi
+terhadap CAUCAFall saja dan belum divalidasi pada kamera lain; laporan melabelinya
+begitu. Pada klip nyata, `Subject.3/Fall forward` menghasilkan peringatan
+(orang terdeteksi 75 persen), konsisten dengan kegagalan pose yang terlihat di
+analisis kelewatan.
+
 ## Validasi saja — tidak dilatih
 
 ### Hard Hat Workers

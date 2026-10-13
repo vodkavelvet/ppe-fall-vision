@@ -626,6 +626,217 @@ def features(
         typer.echo("dihentikan pengguna")
 
 
+@app.command()
+def fall(
+    source: Optional[str] = typer.Option(None, "--source", "-s"),
+    clip_ref: Optional[str] = typer.Option(
+        None, "--clip", help='Klip CAUCAFall, mis. "Subject.1/Fall right".'
+    ),
+    dataset_root: Path = typer.Option(
+        Path("Dataset CAUCAFall/CAUCAFall"), "--dataset-root", envvar="PFV_DATASET_ROOT"
+    ),
+    config: Optional[Path] = typer.Option(None, "--config", "-c", exists=True, dir_okay=False),
+    max_frames: Optional[int] = typer.Option(None, "--max-frames", min=1),
+    window: bool = typer.Option(True, "--window/--no-window"),
+) -> None:
+    """Deteksi jatuh dengan state machine. Banner muncul saat alert.
+
+    Demo Task 6. Warna kotak mengikuti status: hijau UPRIGHT, kuning FALLING,
+    merah FALLEN, biru RECOVERED. Banner ``FALL DETECTED`` muncul tepat pada
+    langkah yang masuk FALLEN dan bertahan selama orang itu masih tergeletak.
+
+    Ambang yang dipakai adalah NILAI AWAL dari subjek latih, bukan hasil tuning
+    akhir. Jangan menyimpulkan akurasi sistem dari satu atau dua klip.
+    """
+    from pfv.draw import draw_pose, draw_text
+    from pfv.fall import FallMonitor, FallState
+    from pfv.perception.yolo_pose import YoloPoseEstimator
+    from pfv.tracking import PersonTracker
+
+    cfg = load_config(config, **{"video.source": source})
+    flags: Optional[list] = None
+    try:
+        if clip_ref:
+            from pfv.data.caucafall import NATIVE_FPS, load_clip
+
+            loaded = load_clip(Path(dataset_root) / clip_ref)
+            flags = loaded.fall_flags
+            frames_source = ImageSequenceSource(
+                loaded.image_paths, fps=NATIVE_FPS, resize=cfg.video.resize,
+                fall_mode=cfg.fall.enabled, min_fall_fps=cfg.fall.min_fps,
+            )
+            fps = NATIVE_FPS
+            typer.echo(f"{loaded.clip_id} | onset label: {loaded.fall_onset()}")
+        else:
+            frames_source = VideoSource(
+                cfg.video.source, frame_skip=cfg.video.frame_skip,
+                resize=cfg.video.resize, loop=cfg.video.loop,
+                fall_mode=cfg.fall.enabled, min_fall_fps=cfg.fall.min_fps,
+            )
+            fps = frames_source.declared_fps or 20.0
+            typer.echo(frames_source.describe())
+    except (VideoSourceError, RuntimeError) as exc:
+        typer.secho(f"Gagal: {exc}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1)
+
+    estimator = YoloPoseEstimator(
+        model=cfg.pose.model, models_dir=cfg.pose.models_dir, device=cfg.pose.device,
+        conf=cfg.pose.conf, keypoint_conf=cfg.pose.keypoint_conf, imgsz=cfg.pose.imgsz,
+    )
+    estimator.load()
+    t = cfg.tracking
+    tracker = PersonTracker(
+        fps=fps, window_s=t.window_s,
+        track_activation_threshold=t.track_activation_threshold,
+        lost_track_buffer=t.lost_track_buffer,
+        minimum_matching_threshold=t.minimum_matching_threshold,
+        minimum_consecutive_frames=t.minimum_consecutive_frames,
+        prune_after_s=t.prune_after_s,
+    )
+    monitor = FallMonitor(cfg.fall, max_gap_s=t.max_gap_s)
+
+    colours = {
+        FallState.UPRIGHT: (0, 200, 0), FallState.FALLING: (0, 215, 255),
+        FallState.FALLEN: (0, 0, 255), FallState.RECOVERED: (255, 160, 0),
+    }
+    alert_times: list = []
+    interrupted = False
+
+    try:
+        for frame in frames_source:
+            tracked = tracker.update(estimator.estimate(frame.image), frame)
+            decisions = monitor.update(tracker, tracked, frame.timestamp_s)
+
+            any_fallen = False
+            for person in tracked:
+                d = decisions.get(person.track_id)
+                if d is None:
+                    continue
+                if d.alert:
+                    alert_times.append(frame.timestamp_s)
+                any_fallen = any_fallen or d.state is FallState.FALLEN
+                draw_pose(frame.image, person.pose,
+                          label=f"{person.label} {d.state.value} {d.lying_for_s:.1f}s")
+                x1, y1, x2, y2 = (int(v) for v in person.pose.bbox)
+                cv2.rectangle(frame.image, (x1, y1), (x2, y2), colours[d.state], 3)
+
+            _draw_overlay(frame, None, frames_source.declared_fps)
+            if any_fallen:
+                h, w = frame.image.shape[:2]
+                cv2.rectangle(frame.image, (0, 0), (w, 52), (0, 0, 200), -1)
+                draw_text(frame.image, "FALL DETECTED", (10, 36), (255, 255, 255), 1.0)
+            if flags is not None:
+                _draw_ground_truth(frame, flags[frame.index], "ground truth")
+
+            if window:
+                cv2.imshow("pfv fall", frame.image)
+                if (cv2.waitKey(1) & 0xFF) in _QUIT_KEYS:
+                    interrupted = True
+                    break
+            if max_frames is not None and frames_source.frames_yielded >= max_frames:
+                break
+    except KeyboardInterrupt:
+        interrupted = True
+    finally:
+        frames_source.release()
+        if window:
+            cv2.destroyAllWindows()
+
+    typer.echo(f"{frames_source.frames_yielded} frame | alert: {len(alert_times)}"
+               + (f" pada t={alert_times[0]:.1f}s" if alert_times else "")
+               + (" | dihentikan pengguna" if interrupted else ""))
+
+
+@app.command()
+def doctor(
+    source: Optional[str] = typer.Option(None, "--source", "-s"),
+    clip_ref: Optional[str] = typer.Option(
+        None, "--clip", help='Klip CAUCAFall sebagai pembanding, mis. "Subject.1/Walk".'
+    ),
+    dataset_root: Path = typer.Option(
+        Path("Dataset CAUCAFall/CAUCAFall"), "--dataset-root", envvar="PFV_DATASET_ROOT"
+    ),
+    config: Optional[Path] = typer.Option(None, "--config", "-c", exists=True, dir_okay=False),
+    seconds: float = typer.Option(
+        20.0, "--seconds", min=1.0, help="Lama pengamatan untuk sumber live."
+    ),
+    max_frames: Optional[int] = typer.Option(None, "--max-frames", min=1),
+) -> None:
+    """Periksa apakah sebuah sumber layak untuk deteksi jatuh.
+
+    Demo Task 7a. Jalankan SEBELUM menyetel ambang pada kamera baru. Orang harus ada
+    di adegan selama pemeriksaan; berdirilah, berjalan, dan berjongkok di depan kamera.
+
+    Hanya pemeriksaan fps yang berdasar pengukuran. Pemeriksaan lainnya adalah
+    heuristik yang dikalibrasi terhadap CAUCAFall saja, dan laporan menandainya.
+    """
+    from pfv.doctor import Sample, SourceMeta, Thresholds, assess, format_report
+    from pfv.perception.yolo_pose import YoloPoseEstimator
+
+    cfg = load_config(config, **{"video.source": source})
+    try:
+        if clip_ref:
+            from pfv.data.caucafall import NATIVE_FPS, load_clip
+
+            loaded = load_clip(Path(dataset_root) / clip_ref)
+            frames_source = ImageSequenceSource(
+                loaded.image_paths, fps=NATIVE_FPS, resize=cfg.video.resize
+            )
+        else:
+            frames_source = VideoSource(
+                cfg.video.source, frame_skip=0, resize=cfg.video.resize
+            )
+    except (VideoSourceError, RuntimeError) as exc:
+        typer.secho(f"Gagal: {exc}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1)
+
+    estimator = YoloPoseEstimator(
+        model=cfg.pose.model, models_dir=cfg.pose.models_dir, device=cfg.pose.device,
+        conf=cfg.pose.conf, keypoint_conf=cfg.pose.keypoint_conf, imgsz=cfg.pose.imgsz,
+    )
+    estimator.load()
+    is_live = getattr(frames_source, "kind", None) is not None and frames_source.kind.is_live
+
+    samples = []
+    started = time.perf_counter()
+    height = width = 0
+    try:
+        for frame in frames_source:
+            width, height = frame.size
+            poses = estimator.estimate(frame.image)
+            if poses:
+                p = max(poses, key=lambda q: q.confidence)
+                samples.append(Sample(
+                    detected=True, bbox=p.bbox, full_torso=p.has_full_torso(),
+                    has_ankle=p.has(15) or p.has(16), has_knee=p.has(13) or p.has(14),
+                ))
+            else:
+                samples.append(Sample(detected=False))
+            elapsed = time.perf_counter() - started
+            if (is_live and elapsed >= seconds) or (
+                max_frames is not None and len(samples) >= max_frames
+            ):
+                break
+    except KeyboardInterrupt:
+        pass
+    finally:
+        elapsed = time.perf_counter() - started
+        frames_source.release()
+
+    # Pada sumber live, fps yang dipakai adalah laju PEMROSESAN end-to-end, bukan
+    # laju kamera. Itu sengaja: laju yang efektif tersedia bagi pipeline.
+    measured = len(samples) / elapsed if (is_live and elapsed > 0) else None
+    meta = SourceMeta(
+        width=width, height=height, declared_fps=frames_source.declared_fps,
+        measured_fps=measured, is_live=is_live, n_frames=len(samples),
+    )
+    report = assess(
+        samples, meta, Thresholds(min_fps=cfg.fall.min_fps)
+    )
+    typer.echo(format_report(report))
+    raise typer.Exit(code=0 if report.verdict.value != "tidak layak" else 1)
+
+
 def _draw_ground_truth(frame: Frame, is_fall: bool, activity: str) -> None:
     """Tandai apakah frame ini berada dalam periode tergeletak menurut label."""
     w, h = frame.size

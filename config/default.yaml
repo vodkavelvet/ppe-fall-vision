@@ -39,6 +39,46 @@ fall:
   # VideoSource memberi peringatan. Lihat Task 7a (pfv doctor).
   min_fps: 15.0
 
+  # Ambang postur: NILAI AWAL, bukan hasil akhir. Diusulkan oleh
+  # scripts/suggest_thresholds.py dari subjek latih 1-6 SAJA (batas laju
+  # salah-positif 10% per fitur). Subjek validasi 7-8 dan uji 9-10 tidak dipakai.
+  # Task 7b mencari ambang yang sesungguhnya dengan grid search.
+  posture:
+    trunk_angle_min_deg: 37.0      # >= ini = tergeletak (andal hanya menyamping)
+    keypoint_spread_y_max: 0.59    # <= ini = tergeletak
+    hip_ankle_dy_max: 0.27         # <= ini = tergeletak
+    hip_knee_dy_max: 0.12          # <= ini = tergeletak
+    trunk_length_max: 0.24         # <= ini = tergeletak (untuk searah kamera)
+    # DUA KELOMPOK harus sama-sama setuju. Orientasi tubuh (sudut, sebaran, panjang
+    # trunk) dan hubungan tinggi anggota badan (pinggul-kaki, pinggul-lutut).
+    # Menghitung kelima sebagai suara setara gagal pada klip nyata: duduk memenuhi
+    # kedua indikator anggota badan, dan membungkuk memenuhi ketiga indikator
+    # orientasi tanpa pernah tergeletak.
+    min_orientation_votes: 1
+    min_limb_votes: 1
+    # Di bawah ini frame berstatus UNKNOWN: tidak menuduh, tidak menyatakan aman.
+    min_available_indicators: 3
+
+  timing:
+    # Orang harus tetap tergeletak sebelum alert. Peredam false positive utama.
+    persistence_s: 3.0
+    min_lying_fraction: 0.7
+    # Orang yang tertutup hampir sepanjang waktu tidak dinyatakan jatuh dari
+    # sedikit frame yang kebetulan terbaca tergeletak.
+    min_known_fraction: 0.5
+    grace_s: 0.5
+    falling_timeout_s: 1.5
+    max_unknown_s: 3.0
+    recover_s: 1.5
+    recovered_hold_s: 1.0
+    cooldown_s: 30.0
+    velocity_window_s: 0.5
+    # Hanya PETUNJUK untuk masuk FALLING, tidak pernah syarat FALLEN. Terukur lemah
+    # di subjek latih: puncak kecepatan klip ADL (median 0,49) mendekati frame
+    # sekitar onset jatuh (p90 0,82). Pada 0,6: 19% frame onset tertangkap dan 0,5%
+    # frame lain salah terpicu. Isi null untuk menonaktifkan.
+    falling_velocity: 0.6
+
 pose:
   # Bobot disimpan di models/, bukan di cache tersembunyi Ultralytics, supaya
   # bisa dilampirkan sebagai berkas biasa ke kernel Kaggle yang tanpa internet.

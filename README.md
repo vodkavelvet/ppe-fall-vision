@@ -24,7 +24,22 @@ Tujuh fitur per frame dan tiga fitur temporal, semuanya mengembalikan `None` bil
 data tidak memadai. Daya pisah dan ketersediaan tiap fitur sudah diukur per
 subjek; lihat `data/DATASETS.md`.
 
-Belum ada keputusan jatuh (state machine) dan belum ada PPE; itu Task 6 dan 8.
+**Task 6 selesai** — state machine jatuh (`pfv fall`): postur dari dua kelompok
+indikator yang harus sama-sama setuju, `persistence`, toleransi, dan cooldown.
+Pratinjau pada subjek latih: recall 22/30, alarm palsu 0/30. Ambangnya nilai awal,
+belum dituning; lihat `data/DATASETS.md` untuk batas yang dibuat dataset dan
+temuan soal indikator anggota badan.
+
+**Task 7a selesai** — `pfv doctor` memeriksa kelayakan sebuah sumber.
+
+**Task 7b: harness dan tuning selesai, evaluasi uji BELUM dijalankan.** Ambang
+dibekukan di `eval/frozen_models.json`, kriteria gerbang di `eval/gate.yaml`.
+Menjalankan `python scripts/evaluate_fall.py` melihat subjek uji (9-10) SEKALI;
+skrip menolak ulangan. **Commit kedua berkas itu lebih dulu**, supaya riwayat git
+membuktikan keduanya ditetapkan sebelum angka uji terlihat.
+
+Belum ada PPE dan belum ada validasi lintas-dataset (UR Fall, Multiple Cameras
+Fall); itu Task 8 dan seterusnya.
 
 ```bash
 # Audit bundel apa adanya (read-only)

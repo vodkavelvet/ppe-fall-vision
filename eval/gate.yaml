@@ -1,0 +1,33 @@
+# Kriteria gerbang Task 7b. DITETAPKAN SEBELUM angka subjek uji (9-10) dilihat.
+#
+# Gerbang ini memutuskan satu hal: apakah model fall temporal (Task 16-18) perlu
+# dilatih, atau cukup aturan dan seluruh kuota GPU dipakai untuk PPE.
+#
+# Mengubah berkas ini setelah evaluasi uji dijalankan membuat hasilnya tidak lagi
+# dapat dipertanggungjawabkan. evaluate_fall.py mencatat hash berkas ini di
+# eval/test_runs.jsonl pada saat evaluasi.
+
+# Recall dihitung atas klip yang SECARA TEORI mungkin tertangkap, yaitu periode
+# tergeletak pada label minimal persistence_s + 0,5 detik. Periode tergeletak
+# CAUCAFall minimum 2,15 detik, jadi sebagian klip tidak mungkin tertangkap oleh
+# algoritma apa pun dan menghitungnya akan menyalahkan algoritma atas penyuntingan
+# dataset. Recall mentah tetap dilaporkan berdampingan.
+achievable_recall_min: 0.85
+
+# Proporsi klip ADL yang menghasilkan alarm palsu. Dipakai sebagai ganti
+# 'alarm palsu per jam': seluruh ADL hanya 8,6 menit, jadi satu alarm palsu
+# berekstrapolasi menjadi ~7 per jam dan angka itu tidak bermakna.
+false_alarm_clip_rate_max: 0.10
+
+# Median waktu dari awal periode tergeletak (label) sampai alert, dalam detik.
+latency_median_max_s: 5.0
+
+# Rencana awal menyebut recall >= 90% dan <= 1 alarm palsu/jam. Keduanya diganti:
+# recall mentah dibatasi struktur dataset (batas atas 92% pada persistence 3 detik),
+# dan alarm palsu per jam tidak bermakna pada 8,6 menit data.
+
+# CATATAN KETIDAKPASTIAN. Subjek uji hanya 2 orang: 20 klip jatuh dan 20 klip ADL.
+# Satu klip menggeser recall 5 poin. Vonis gerbang memakai ESTIMASI TITIK, tetapi
+# laporan selalu menyertakan interval Wilson 95%. Vonis adalah keputusan penyaringan
+# untuk memutuskan arah kerja, bukan bukti statistik. Bukti generalisasi yang
+# sesungguhnya harus datang dari UR Fall dan Multiple Cameras Fall.

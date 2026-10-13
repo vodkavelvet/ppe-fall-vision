@@ -311,21 +311,39 @@ def compute_static(pose: PersonPose) -> StaticFeatures:
     )
 
 
-def compute_temporal(state: "object", *, max_gap_s: float = 0.2) -> TemporalFeatures:
+def _is_contiguous(samples: Sequence[object], max_gap_s: float) -> bool:
+    """``True`` bila tidak ada jeda antar sampel yang melebihi ``max_gap_s``."""
+    for prev, cur in zip(samples, list(samples)[1:]):
+        if cur.timestamp_s - prev.timestamp_s > max_gap_s:
+            return False
+    return True
+
+
+def compute_temporal(
+    state: "object", *, max_gap_s: float = 0.2, window_s: Optional[float] = None
+) -> TemporalFeatures:
     """Hitung fitur temporal dari :class:`~pfv.tracking.TrackState`.
 
     Diterima sebagai ``object`` dan diakses lewat duck typing supaya modul ini
     tetap bebas dari ketergantungan ke lapisan tracking: fitur harus bisa dihitung
     dari riwayat apa pun, termasuk keypoint hasil ekstraksi yang dibaca dari berkas.
+
+    ``window_s`` membatasi perhitungan ke sampel TERBARU saja. Ini penting karena
+    riwayat track menyimpan 3 detik, sedangkan jatuh berlangsung 0,5-1 detik:
+    regresi atas seluruh 3 detik akan mengencerkan lonjakan kecepatan menjadi
+    hampir tak terlihat. ``None`` memakai semua sampel.
     """
     samples = list(getattr(state, "samples", []) or [])
+    if window_s is not None and samples:
+        cutoff = samples[-1].timestamp_s - window_s - 1e-6
+        samples = [s for s in samples if s.timestamp_s >= cutoff]
     n = len(samples)
     if n == 0:
         return TemporalFeatures(n_samples=0)
 
     times = [s.timestamp_s for s in samples]
     span = float(times[-1] - times[0]) if n > 1 else 0.0
-    contiguous = bool(state.is_contiguous(max_gap_s=max_gap_s))
+    contiguous = _is_contiguous(samples, max_gap_s)
 
     if n < 2 or not contiguous:
         # Riwayat berlubang: laju apa pun yang dihitung di sini akan menyesatkan.
