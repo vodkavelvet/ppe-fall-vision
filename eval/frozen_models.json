@@ -1,0 +1,347 @@
+{
+  "persistence_s": 3.0,
+  "selection_rule": {
+    "max_train_false_alarm_clips": 1,
+    "recall_tolerance_clips": 1
+  },
+  "train_clips": [
+    "s01_fall_backwards",
+    "s01_fall_forward",
+    "s01_fall_left",
+    "s01_fall_right",
+    "s01_fall_sitting",
+    "s01_hop",
+    "s01_kneel",
+    "s01_pick_up_object",
+    "s01_sit_down",
+    "s01_walk",
+    "s02_fall_backwards",
+    "s02_fall_forward",
+    "s02_fall_left",
+    "s02_fall_right",
+    "s02_fall_sitting",
+    "s02_hop",
+    "s02_kneel",
+    "s02_pick_up_object",
+    "s02_sit_down",
+    "s02_walk",
+    "s03_fall_backwards",
+    "s03_fall_forward",
+    "s03_fall_left",
+    "s03_fall_right",
+    "s03_fall_sitting",
+    "s03_hop",
+    "s03_kneel",
+    "s03_pick_up_object",
+    "s03_sit_down",
+    "s03_walk",
+    "s04_fall_backwards",
+    "s04_fall_forward",
+    "s04_fall_left",
+    "s04_fall_right",
+    "s04_fall_sitting",
+    "s04_hop",
+    "s04_kneel",
+    "s04_pick_up_object",
+    "s04_sit_down",
+    "s04_walk",
+    "s05_fall_backwards",
+    "s05_fall_forward",
+    "s05_fall_left",
+    "s05_fall_right",
+    "s05_fall_sitting",
+    "s05_hop",
+    "s05_kneel",
+    "s05_pick_up_object",
+    "s05_sit_down",
+    "s05_walk",
+    "s06_fall_backwards",
+    "s06_fall_forward",
+    "s06_fall_left",
+    "s06_fall_right",
+    "s06_fall_sitting",
+    "s06_hop",
+    "s06_kneel",
+    "s06_pick_up_object",
+    "s06_sit_down",
+    "s06_walk"
+  ],
+  "validation_clips": [
+    "s07_fall_backwards",
+    "s07_fall_forward",
+    "s07_fall_left",
+    "s07_fall_right",
+    "s07_fall_sitting",
+    "s07_hop",
+    "s07_kneel",
+    "s07_pick_up_object",
+    "s07_sit_down",
+    "s07_walk",
+    "s08_fall_backwards",
+    "s08_fall_forward",
+    "s08_fall_left",
+    "s08_fall_right",
+    "s08_fall_sitting",
+    "s08_hop",
+    "s08_kneel",
+    "s08_pick_up_object",
+    "s08_sit_down",
+    "s08_walk"
+  ],
+  "models": {
+    "aspect": {
+      "spec": {
+        "model": "aspect",
+        "params": {
+          "max_ratio": 1.0
+        }
+      },
+      "train": {
+        "recall": [
+          19,
+          30
+        ],
+        "achievable_recall": [
+          17,
+          25
+        ],
+        "false_alarm_clips": [
+          0,
+          30
+        ],
+        "camera_axis_recall": [
+          0,
+          6
+        ],
+        "latency_median_s": 2.6500000000000004
+      },
+      "validation": {
+        "recall": [
+          8,
+          10
+        ],
+        "achievable_recall": [
+          8,
+          10
+        ],
+        "false_alarm_clips": [
+          1,
+          10
+        ],
+        "camera_axis_recall": [
+          0,
+          2
+        ],
+        "latency_median_s": 2.675
+      },
+      "n_candidates": 7,
+      "n_eligible": 6,
+      "n_shortlist": 2
+    },
+    "angle": {
+      "spec": {
+        "model": "angle",
+        "params": {
+          "min_deg": 65.0
+        }
+      },
+      "train": {
+        "recall": [
+          11,
+          30
+        ],
+        "achievable_recall": [
+          11,
+          25
+        ],
+        "false_alarm_clips": [
+          1,
+          30
+        ],
+        "camera_axis_recall": [
+          0,
+          6
+        ],
+        "latency_median_s": 3.15
+      },
+      "validation": {
+        "recall": [
+          8,
+          10
+        ],
+        "achievable_recall": [
+          8,
+          10
+        ],
+        "false_alarm_clips": [
+          0,
+          10
+        ],
+        "camera_axis_recall": [
+          0,
+          2
+        ],
+        "latency_median_s": 3.2500000000000004
+      },
+      "n_candidates": 6,
+      "n_eligible": 2,
+      "n_shortlist": 2
+    },
+    "angle_or_aspect": {
+      "spec": {
+        "model": "angle_or_aspect",
+        "params": {
+          "max_ratio": 1.0,
+          "min_deg": 65.0
+        }
+      },
+      "train": {
+        "recall": [
+          19,
+          30
+        ],
+        "achievable_recall": [
+          17,
+          25
+        ],
+        "false_alarm_clips": [
+          1,
+          30
+        ],
+        "camera_axis_recall": [
+          0,
+          6
+        ],
+        "latency_median_s": 2.6000000000000005
+      },
+      "validation": {
+        "recall": [
+          8,
+          10
+        ],
+        "achievable_recall": [
+          8,
+          10
+        ],
+        "false_alarm_clips": [
+          1,
+          10
+        ],
+        "camera_axis_recall": [
+          0,
+          2
+        ],
+        "latency_median_s": 2.675
+      },
+      "n_candidates": 42,
+      "n_eligible": 10,
+      "n_shortlist": 2
+    },
+    "orientation": {
+      "spec": {
+        "model": "orientation",
+        "params": {
+          "keypoint_spread_y_max": 0.45,
+          "min_votes": 2.0,
+          "trunk_angle_min_deg": 30.0,
+          "trunk_length_max": 0.28
+        }
+      },
+      "train": {
+        "recall": [
+          19,
+          30
+        ],
+        "achievable_recall": [
+          17,
+          25
+        ],
+        "false_alarm_clips": [
+          1,
+          30
+        ],
+        "camera_axis_recall": [
+          0,
+          6
+        ],
+        "latency_median_s": 2.45
+      },
+      "validation": {
+        "recall": [
+          8,
+          10
+        ],
+        "achievable_recall": [
+          8,
+          10
+        ],
+        "false_alarm_clips": [
+          1,
+          10
+        ],
+        "camera_axis_recall": [
+          0,
+          2
+        ],
+        "latency_median_s": 2.5000000000000004
+      },
+      "n_candidates": 96,
+      "n_eligible": 21,
+      "n_shortlist": 7
+    },
+    "full": {
+      "spec": {
+        "model": "full",
+        "params": {
+          "hip_ankle_dy_max": 0.34,
+          "hip_knee_dy_max": 0.12,
+          "keypoint_spread_y_max": 0.45,
+          "trunk_angle_min_deg": 45.0,
+          "trunk_length_max": 0.28
+        }
+      },
+      "train": {
+        "recall": [
+          25,
+          30
+        ],
+        "achievable_recall": [
+          22,
+          25
+        ],
+        "false_alarm_clips": [
+          1,
+          30
+        ],
+        "camera_axis_recall": [
+          5,
+          6
+        ],
+        "latency_median_s": 2.7
+      },
+      "validation": {
+        "recall": [
+          9,
+          10
+        ],
+        "achievable_recall": [
+          9,
+          10
+        ],
+        "false_alarm_clips": [
+          1,
+          10
+        ],
+        "camera_axis_recall": [
+          1,
+          2
+        ],
+        "latency_median_s": 2.8000000000000007
+      },
+      "n_candidates": 432,
+      "n_eligible": 412,
+      "n_shortlist": 56
+    }
+  },
+  "fingerprint": "5f42bec726485a2d"
+}

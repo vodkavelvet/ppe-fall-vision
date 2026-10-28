@@ -19,7 +19,50 @@ dan ground truth evaluasi.
 waktu (`pfv track`). Ambang pencocokan 0,95 dipilih dari pengukuran atas 100 klip;
 lihat `data/DATASETS.md`. Pertukaran ID antar orang belum teruji pada data nyata.
 
-Belum ada deteksi jatuh dan PPE; itu mulai Task 5.
+**Task 5 selesai** — fitur deteksi jatuh sebagai fungsi murni (`pfv features`).
+Tujuh fitur awal per frame dan tiga fitur temporal, semuanya mengembalikan `None` bila
+data tidak memadai. Daya pisah dan ketersediaan tiap fitur sudah diukur per
+subjek; lihat `data/DATASETS.md`.
+
+**Task 6 selesai** — state machine jatuh (`pfv fall`): postur dari dua kelompok
+indikator yang harus sama-sama setuju, `persistence`, toleransi, dan cooldown.
+Pratinjau pada subjek latih: recall 22/30, alarm palsu 0/30. Ambangnya nilai awal,
+belum dituning; lihat `data/DATASETS.md` untuk batas yang dibuat dataset dan
+temuan soal indikator anggota badan.
+
+**Task 7a selesai** — `pfv doctor` memeriksa kelayakan sebuah sumber.
+
+**Task 7b: evaluasi V1 selesai — LOLOS.** Subjek uji 9–10: recall mentah
+9/10, recall pada klip yang memenuhi syarat durasi 8/9, alarm palsu 0/10 klip
+ADL, median latensi 3,1 detik. Hasil ada di `eval/test_results.json` dan catatan
+run di `eval/test_runs.jsonl`. Sampelnya 10 jatuh dan 10 ADL, bukan 20 per kelas.
+Berkas beku dan gerbang tetap dipertahankan sebagai bukti versi V1.
+
+**Perbaikan persepsi V2:** profil `config/fall_robust.yaml` menambahkan pemeriksaan
+rotasi dan dukungan lintas orientasi untuk deteksi lemah, serta cache semua
+kandidat sebelum tracking. Profil ini dipertahankan untuk pembandingan V2. Ini versi
+pengembangan setelah diagnosis data uji, bukan hasil evaluasi V1. Pemakaian dan
+batasannya ada di [`docs/FALL_ROBUST_V2.md`](docs/FALL_ROBUST_V2.md).
+
+**Perbaikan V3 (pengembangan):** cek kaki tertekuk dan tubuh tegak membatasi
+bukti trunk pendek; alarm baru memerlukan frame tergeletak saat itu. Launcher
+memakai `config/fall_robust_v3.yaml`. Pemicu FALLING dari kecepatan saja
+dinonaktifkan dan Subject 8 Walk tetap UPRIGHT pada seluruh frame yang diperiksa.
+Rincian implementasi: [`docs/FALL_ROBUST_V3.md`](docs/FALL_ROBUST_V3.md).
+
+**Audit penuh Subject 1–10:** inference baru pada 100 klip (19.999 frame)
+menghasilkan alarm pada **42/50 klip jatuh**, alarm palsu pada **1/50 klip
+aktivitas biasa**, dan status sementara FALLING pada **27/50 klip aktivitas
+biasa**. Masih ada 8 jatuh terlewat serta alarm ganda pada Subject 8 Fall left.
+Modul belum benar untuk semua kasus. Ini audit pengembangan pada data yang sudah
+dilihat, bukan test independen baru; konfigurasi tidak dituning selama audit.
+[Ringkasan per subjek dan batasan](docs/ALL_SUBJECTS_AUDIT.md).
+[Bukti terstruktur dan provenance](eval/development/all_subjects_v3_20261028.json).
+Verifikasi kode terakhir: **574 tes otomatis lolos**.
+
+
+Belum ada PPE dan belum ada validasi lintas-dataset (UR Fall, Multiple Cameras
+Fall); itu Task 8 dan seterusnya.
 
 ```bash
 # Audit bundel apa adanya (read-only)

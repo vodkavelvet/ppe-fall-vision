@@ -1,0 +1,1601 @@
+{
+  "protocol": "already-seen development regression; includes state labels, not only alarms",
+  "before_profile": {
+    "video": {
+      "source": "0",
+      "frame_skip": 0,
+      "resize": {
+        "mode": "longest_side",
+        "longest_side": 960,
+        "letterbox_size": null,
+        "allow_upscale": false
+      },
+      "loop": false
+    },
+    "fall": {
+      "enabled": true,
+      "min_fps": 15.0,
+      "posture": {
+        "trunk_angle_min_deg": 45.0,
+        "keypoint_spread_y_max": 0.45,
+        "hip_ankle_dy_max": 0.34,
+        "hip_knee_dy_max": 0.12,
+        "trunk_length_max": 0.28,
+        "seated_spread_y_min": 0.59,
+        "upright_aspect_ratio_min": 2.4,
+        "upright_trunk_angle_max_deg": 30.0,
+        "seated_knee_angle_max_deg": 135.0,
+        "min_orientation_votes": 1,
+        "min_limb_votes": 1,
+        "min_available_indicators": 3
+      },
+      "timing": {
+        "require_current_lying_for_alert": true,
+        "persistence_s": 3.0,
+        "min_lying_fraction": 0.7,
+        "min_known_fraction": 0.5,
+        "grace_s": 0.5,
+        "falling_timeout_s": 1.5,
+        "max_unknown_s": 3.0,
+        "recover_s": 1.5,
+        "recovered_hold_s": 1.0,
+        "cooldown_s": 30.0,
+        "velocity_window_s": 0.5,
+        "falling_velocity": 0.6
+      }
+    },
+    "pose": {
+      "model": "yolo11n-pose.pt",
+      "models_dir": "models",
+      "device": "auto",
+      "conf": 0.25,
+      "keypoint_conf": 0.5,
+      "imgsz": 640,
+      "rotations": [
+        -90,
+        90
+      ],
+      "merge_iou": 0.5,
+      "rotation_conf": 0.5
+    },
+    "tracking": {
+      "window_s": 3.0,
+      "track_activation_threshold": 0.25,
+      "lost_track_buffer": 30,
+      "minimum_matching_threshold": 0.95,
+      "minimum_consecutive_frames": 1,
+      "prune_after_s": 5.0,
+      "max_gap_s": 0.2
+    }
+  },
+  "after_profile": {
+    "video": {
+      "source": "0",
+      "frame_skip": 0,
+      "resize": {
+        "mode": "longest_side",
+        "longest_side": 960,
+        "letterbox_size": null,
+        "allow_upscale": false
+      },
+      "loop": false
+    },
+    "fall": {
+      "enabled": true,
+      "min_fps": 15.0,
+      "posture": {
+        "trunk_angle_min_deg": 45.0,
+        "keypoint_spread_y_max": 0.45,
+        "hip_ankle_dy_max": 0.34,
+        "hip_knee_dy_max": 0.12,
+        "trunk_length_max": 0.28,
+        "seated_spread_y_min": 0.59,
+        "upright_aspect_ratio_min": 1.4,
+        "upright_trunk_angle_max_deg": 45.0,
+        "seated_knee_angle_max_deg": 135.0,
+        "min_orientation_votes": 1,
+        "min_limb_votes": 1,
+        "min_available_indicators": 3
+      },
+      "timing": {
+        "require_current_lying_for_alert": true,
+        "persistence_s": 3.0,
+        "min_lying_fraction": 0.7,
+        "min_known_fraction": 0.5,
+        "grace_s": 0.5,
+        "falling_timeout_s": 1.5,
+        "max_unknown_s": 3.0,
+        "recover_s": 1.5,
+        "recovered_hold_s": 1.0,
+        "cooldown_s": 30.0,
+        "velocity_window_s": 0.5,
+        "falling_velocity": null
+      }
+    },
+    "pose": {
+      "model": "yolo11n-pose.pt",
+      "models_dir": "models",
+      "device": "auto",
+      "conf": 0.25,
+      "keypoint_conf": 0.5,
+      "imgsz": 640,
+      "rotations": [
+        -90,
+        90
+      ],
+      "merge_iou": 0.5,
+      "rotation_conf": 0.5
+    },
+    "tracking": {
+      "window_s": 3.0,
+      "track_activation_threshold": 0.25,
+      "lost_track_buffer": 30,
+      "minimum_matching_threshold": 0.95,
+      "minimum_consecutive_frames": 1,
+      "prune_after_s": 5.0,
+      "max_gap_s": 0.2
+    }
+  },
+  "summary": {
+    "before": {
+      "detected_falls": 12,
+      "fall_clips": 13,
+      "false_alarm_clips": [],
+      "normal_clips": 17
+    },
+    "after": {
+      "detected_falls": 12,
+      "fall_clips": 13,
+      "false_alarm_clips": [],
+      "normal_clips": 17
+    }
+  },
+  "s08_walk": {
+    "clip": "s08_walk",
+    "is_fall": false,
+    "lying_s": 0.0,
+    "before": {
+      "states": {
+        "UPRIGHT": 80,
+        "FALLING": 139
+      },
+      "alerts": [],
+      "transitions": [
+        {
+          "t": 0.05,
+          "state": "FALLING",
+          "reason": "fast_descent"
+        },
+        {
+          "t": 3.45,
+          "state": "UPRIGHT",
+          "reason": "falling_timeout"
+        },
+        {
+          "t": 7.3,
+          "state": "FALLING",
+          "reason": "lying_posture"
+        }
+      ]
+    },
+    "after": {
+      "states": {
+        "UPRIGHT": 219
+      },
+      "alerts": [],
+      "transitions": []
+    }
+  },
+  "lost_falls": [],
+  "clips": [
+    {
+      "clip": "s01_fall_left",
+      "is_fall": true,
+      "lying_s": 2.15,
+      "before": {
+        "states": {
+          "UPRIGHT": 23,
+          "FALLING": 48
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 1.15,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 34,
+          "FALLING": 37
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 1.7,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          }
+        ]
+      }
+    },
+    {
+      "clip": "s01_kneel",
+      "is_fall": false,
+      "lying_s": 0.0,
+      "before": {
+        "states": {
+          "UPRIGHT": 100,
+          "FALLING": 110
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 1.3,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 7.25,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 125,
+          "FALLING": 85
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 2.55,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 7.25,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          }
+        ]
+      }
+    },
+    {
+      "clip": "s01_pick_up_object",
+      "is_fall": false,
+      "lying_s": 0.0,
+      "before": {
+        "states": {
+          "UPRIGHT": 88,
+          "FALLING": 30
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 0.05,
+            "state": "FALLING",
+            "reason": "fast_descent"
+          },
+          {
+            "t": 1.55,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 118
+        },
+        "alerts": [],
+        "transitions": []
+      }
+    },
+    {
+      "clip": "s01_sit_down",
+      "is_fall": false,
+      "lying_s": 0.0,
+      "before": {
+        "states": {
+          "UPRIGHT": 48,
+          "FALLING": 78
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 0.05,
+            "state": "FALLING",
+            "reason": "fast_descent"
+          },
+          {
+            "t": 1.6,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          },
+          {
+            "t": 3.55,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 6.75,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 79,
+          "FALLING": 47
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 3.55,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 6.75,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          }
+        ]
+      }
+    },
+    {
+      "clip": "s04_kneel",
+      "is_fall": false,
+      "lying_s": 0.0,
+      "before": {
+        "states": {
+          "UPRIGHT": 137,
+          "FALLING": 86
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 0.45,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 4.75,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 190,
+          "FALLING": 33
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 2.1,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 3.75,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          }
+        ]
+      }
+    },
+    {
+      "clip": "s04_pick_up_object",
+      "is_fall": false,
+      "lying_s": 0.0,
+      "before": {
+        "states": {
+          "UPRIGHT": 123,
+          "FALLING": 52
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 0.05,
+            "state": "FALLING",
+            "reason": "fast_descent"
+          },
+          {
+            "t": 2.75,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 175
+        },
+        "alerts": [],
+        "transitions": []
+      }
+    },
+    {
+      "clip": "s04_sit_down",
+      "is_fall": false,
+      "lying_s": 0.0,
+      "before": {
+        "states": {
+          "FALLING": 136,
+          "UPRIGHT": 64
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 0.0,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 6.8,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 169,
+          "FALLING": 31
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 5.25,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 6.8,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          }
+        ]
+      }
+    },
+    {
+      "clip": "s05_fall_forward",
+      "is_fall": true,
+      "lying_s": 7.15,
+      "before": {
+        "states": {
+          "UPRIGHT": 37,
+          "FALLING": 90,
+          "FALLEN": 71
+        },
+        "alerts": [
+          6.5
+        ],
+        "transitions": [
+          {
+            "t": 1.85,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 6.5,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 44,
+          "FALLING": 83,
+          "FALLEN": 71
+        },
+        "alerts": [
+          6.5
+        ],
+        "transitions": [
+          {
+            "t": 2.2,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 6.5,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          }
+        ]
+      }
+    },
+    {
+      "clip": "s07_fall_forward",
+      "is_fall": true,
+      "lying_s": 6.0,
+      "before": {
+        "states": {
+          "UPRIGHT": 20,
+          "FALLING": 94,
+          "FALLEN": 48
+        },
+        "alerts": [
+          5.75
+        ],
+        "transitions": [
+          {
+            "t": 1.0,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 5.75,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 54,
+          "FALLING": 60,
+          "FALLEN": 48
+        },
+        "alerts": [
+          5.75
+        ],
+        "transitions": [
+          {
+            "t": 2.75,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 5.75,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          }
+        ]
+      }
+    },
+    {
+      "clip": "s08_walk",
+      "is_fall": false,
+      "lying_s": 0.0,
+      "before": {
+        "states": {
+          "UPRIGHT": 80,
+          "FALLING": 139
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 0.05,
+            "state": "FALLING",
+            "reason": "fast_descent"
+          },
+          {
+            "t": 3.45,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          },
+          {
+            "t": 7.3,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 219
+        },
+        "alerts": [],
+        "transitions": []
+      }
+    },
+    {
+      "clip": "s09_fall_backwards",
+      "is_fall": true,
+      "lying_s": 9.4,
+      "before": {
+        "states": {
+          "UPRIGHT": 46,
+          "FALLING": 60,
+          "FALLEN": 145
+        },
+        "alerts": [
+          5.4
+        ],
+        "transitions": [
+          {
+            "t": 2.35,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 5.4,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 46,
+          "FALLING": 60,
+          "FALLEN": 145
+        },
+        "alerts": [
+          5.4
+        ],
+        "transitions": [
+          {
+            "t": 2.35,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 5.4,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          }
+        ]
+      }
+    },
+    {
+      "clip": "s09_fall_forward",
+      "is_fall": true,
+      "lying_s": 2.35,
+      "before": {
+        "states": {
+          "UPRIGHT": 28,
+          "FALLING": 93,
+          "FALLEN": 14
+        },
+        "alerts": [
+          6.75
+        ],
+        "transitions": [
+          {
+            "t": 1.4,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 6.75,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 40,
+          "FALLING": 73,
+          "FALLEN": 22
+        },
+        "alerts": [
+          6.35
+        ],
+        "transitions": [
+          {
+            "t": 2.05,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 6.35,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          }
+        ]
+      }
+    },
+    {
+      "clip": "s09_fall_left",
+      "is_fall": true,
+      "lying_s": 7.65,
+      "before": {
+        "states": {
+          "UPRIGHT": 42,
+          "FALLING": 75,
+          "FALLEN": 83
+        },
+        "alerts": [
+          6.25
+        ],
+        "transitions": [
+          {
+            "t": 2.25,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 6.25,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 42,
+          "FALLING": 75,
+          "FALLEN": 83
+        },
+        "alerts": [
+          6.25
+        ],
+        "transitions": [
+          {
+            "t": 2.25,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 6.25,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          }
+        ]
+      }
+    },
+    {
+      "clip": "s09_fall_right",
+      "is_fall": true,
+      "lying_s": 6.65,
+      "before": {
+        "states": {
+          "UPRIGHT": 48,
+          "FALLING": 60,
+          "FALLEN": 82
+        },
+        "alerts": [
+          5.4
+        ],
+        "transitions": [
+          {
+            "t": 2.4,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 5.4,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 48,
+          "FALLING": 60,
+          "FALLEN": 82
+        },
+        "alerts": [
+          5.4
+        ],
+        "transitions": [
+          {
+            "t": 2.4,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 5.4,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          }
+        ]
+      }
+    },
+    {
+      "clip": "s09_fall_sitting",
+      "is_fall": true,
+      "lying_s": 6.4,
+      "before": {
+        "states": {
+          "UPRIGHT": 49,
+          "FALLING": 95,
+          "FALLEN": 71
+        },
+        "alerts": [
+          7.3
+        ],
+        "transitions": [
+          {
+            "t": 2.55,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 7.3,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 49,
+          "FALLING": 95,
+          "FALLEN": 71
+        },
+        "alerts": [
+          7.3
+        ],
+        "transitions": [
+          {
+            "t": 2.55,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 7.3,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          }
+        ]
+      }
+    },
+    {
+      "clip": "s09_hop",
+      "is_fall": false,
+      "lying_s": 0.0,
+      "before": {
+        "states": {
+          "UPRIGHT": 179,
+          "FALLING": 30
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 6.8,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 8.3,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 209
+        },
+        "alerts": [],
+        "transitions": []
+      }
+    },
+    {
+      "clip": "s09_kneel",
+      "is_fall": false,
+      "lying_s": 0.0,
+      "before": {
+        "states": {
+          "UPRIGHT": 133,
+          "FALLING": 61
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 0.05,
+            "state": "FALLING",
+            "reason": "fast_descent"
+          },
+          {
+            "t": 3.1,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 194
+        },
+        "alerts": [],
+        "transitions": []
+      }
+    },
+    {
+      "clip": "s09_pick_up_object",
+      "is_fall": false,
+      "lying_s": 0.0,
+      "before": {
+        "states": {
+          "UPRIGHT": 140,
+          "FALLING": 81
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 0.05,
+            "state": "FALLING",
+            "reason": "fast_descent"
+          },
+          {
+            "t": 1.55,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          },
+          {
+            "t": 8.5,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 189,
+          "FALLING": 32
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 8.5,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 10.1,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          }
+        ]
+      }
+    },
+    {
+      "clip": "s09_sit_down",
+      "is_fall": false,
+      "lying_s": 0.0,
+      "before": {
+        "states": {
+          "UPRIGHT": 149,
+          "FALLING": 87
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 0.05,
+            "state": "FALLING",
+            "reason": "fast_descent"
+          },
+          {
+            "t": 1.55,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          },
+          {
+            "t": 3.25,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 5.25,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          },
+          {
+            "t": 10.95,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 199,
+          "FALLING": 37
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 3.25,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 5.25,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          }
+        ]
+      }
+    },
+    {
+      "clip": "s09_walk",
+      "is_fall": false,
+      "lying_s": 0.0,
+      "before": {
+        "states": {
+          "UPRIGHT": 235
+        },
+        "alerts": [],
+        "transitions": []
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 235
+        },
+        "alerts": [],
+        "transitions": []
+      }
+    },
+    {
+      "clip": "s10_fall_backwards",
+      "is_fall": true,
+      "lying_s": 9.85,
+      "before": {
+        "states": {
+          "UPRIGHT": 25,
+          "FALLING": 113,
+          "FALLEN": 137
+        },
+        "alerts": [
+          6.9
+        ],
+        "transitions": [
+          {
+            "t": 1.25,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 6.9,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 77,
+          "FALLING": 61,
+          "FALLEN": 137
+        },
+        "alerts": [
+          6.9
+        ],
+        "transitions": [
+          {
+            "t": 3.85,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 6.9,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          }
+        ]
+      }
+    },
+    {
+      "clip": "s10_fall_forward",
+      "is_fall": true,
+      "lying_s": 9.55,
+      "before": {
+        "states": {
+          "UPRIGHT": 31,
+          "FALLING": 178,
+          "FALLEN": 8
+        },
+        "alerts": [
+          11.8
+        ],
+        "transitions": [
+          {
+            "t": 1.6,
+            "state": "FALLING",
+            "reason": "fast_descent"
+          },
+          {
+            "t": 2.9,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 11.8,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 45,
+          "FALLING": 167,
+          "FALLEN": 5
+        },
+        "alerts": [
+          11.95
+        ],
+        "transitions": [
+          {
+            "t": 3.3,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 6.15,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          },
+          {
+            "t": 6.45,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 11.95,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          }
+        ]
+      }
+    },
+    {
+      "clip": "s10_fall_left",
+      "is_fall": true,
+      "lying_s": 8.15,
+      "before": {
+        "states": {
+          "UPRIGHT": 31,
+          "FALLING": 79,
+          "FALLEN": 103
+        },
+        "alerts": [
+          5.5
+        ],
+        "transitions": [
+          {
+            "t": 1.55,
+            "state": "FALLING",
+            "reason": "fast_descent"
+          },
+          {
+            "t": 5.5,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 50,
+          "FALLING": 60,
+          "FALLEN": 103
+        },
+        "alerts": [
+          5.5
+        ],
+        "transitions": [
+          {
+            "t": 2.5,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 5.5,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          }
+        ]
+      }
+    },
+    {
+      "clip": "s10_fall_right",
+      "is_fall": true,
+      "lying_s": 6.45,
+      "before": {
+        "states": {
+          "UPRIGHT": 5,
+          "FALLING": 128,
+          "FALLEN": 80
+        },
+        "alerts": [
+          6.15
+        ],
+        "transitions": [
+          {
+            "t": 0.15,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 2.85,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          },
+          {
+            "t": 2.95,
+            "state": "FALLING",
+            "reason": "fast_descent"
+          },
+          {
+            "t": 6.15,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          },
+          {
+            "t": 4.55,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 62,
+          "FALLING": 71,
+          "FALLEN": 80
+        },
+        "alerts": [
+          6.15
+        ],
+        "transitions": [
+          {
+            "t": 3.1,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 6.15,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          },
+          {
+            "t": 4.55,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          }
+        ]
+      }
+    },
+    {
+      "clip": "s10_fall_sitting",
+      "is_fall": true,
+      "lying_s": 10.65,
+      "before": {
+        "states": {
+          "UPRIGHT": 104,
+          "FALLING": 150,
+          "FALLEN": 102
+        },
+        "alerts": [
+          9.3
+        ],
+        "transitions": [
+          {
+            "t": 1.6,
+            "state": "FALLING",
+            "reason": "fast_descent"
+          },
+          {
+            "t": 3.25,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          },
+          {
+            "t": 3.85,
+            "state": "FALLING",
+            "reason": "fast_descent"
+          },
+          {
+            "t": 9.3,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          },
+          {
+            "t": 9.4,
+            "state": "FALLING",
+            "reason": "fast_descent"
+          },
+          {
+            "t": 10.9,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 166,
+          "FALLING": 88,
+          "FALLEN": 102
+        },
+        "alerts": [
+          9.3
+        ],
+        "transitions": [
+          {
+            "t": 4.45,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 9.3,
+            "state": "FALLEN",
+            "reason": "persistent_lying"
+          }
+        ]
+      }
+    },
+    {
+      "clip": "s10_hop",
+      "is_fall": false,
+      "lying_s": 0.0,
+      "before": {
+        "states": {
+          "UPRIGHT": 166,
+          "FALLING": 81
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 1.85,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 4.5,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          },
+          {
+            "t": 8.85,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 10.35,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 247
+        },
+        "alerts": [],
+        "transitions": []
+      }
+    },
+    {
+      "clip": "s10_kneel",
+      "is_fall": false,
+      "lying_s": 0.0,
+      "before": {
+        "states": {
+          "UPRIGHT": 95,
+          "FALLING": 147
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 2.4,
+            "state": "FALLING",
+            "reason": "fast_descent"
+          },
+          {
+            "t": 3.9,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          },
+          {
+            "t": 4.05,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 6.65,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          },
+          {
+            "t": 7.8,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 9.9,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          },
+          {
+            "t": 11.0,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 130,
+          "FALLING": 112
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 4.05,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 6.65,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          },
+          {
+            "t": 7.95,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 9.5,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          },
+          {
+            "t": 11.0,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          }
+        ]
+      }
+    },
+    {
+      "clip": "s10_pick_up_object",
+      "is_fall": false,
+      "lying_s": 0.0,
+      "before": {
+        "states": {
+          "UPRIGHT": 119,
+          "FALLING": 106
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 5.4,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 7.25,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          },
+          {
+            "t": 4.75,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 11.6,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 187,
+          "FALLING": 38
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 5.4,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 6.9,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          },
+          {
+            "t": 4.75,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          }
+        ]
+      }
+    },
+    {
+      "clip": "s10_sit_down",
+      "is_fall": false,
+      "lying_s": 0.0,
+      "before": {
+        "states": {
+          "UPRIGHT": 122,
+          "FALLING": 82
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 0.85,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 2.5,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          },
+          {
+            "t": 3.5,
+            "state": "FALLING",
+            "reason": "fast_descent"
+          },
+          {
+            "t": 5.8,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          },
+          {
+            "t": 10.9,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 204
+        },
+        "alerts": [],
+        "transitions": []
+      }
+    },
+    {
+      "clip": "s10_walk",
+      "is_fall": false,
+      "lying_s": 0.0,
+      "before": {
+        "states": {
+          "FALLING": 121,
+          "UPRIGHT": 101
+        },
+        "alerts": [],
+        "transitions": [
+          {
+            "t": 0.0,
+            "state": "FALLING",
+            "reason": "lying_posture"
+          },
+          {
+            "t": 6.2,
+            "state": "UPRIGHT",
+            "reason": "falling_timeout"
+          }
+        ]
+      },
+      "after": {
+        "states": {
+          "UPRIGHT": 222
+        },
+        "alerts": [],
+        "transitions": []
+      }
+    }
+  ],
+  "code_sha256": {
+    "config/fall_robust_v3.yaml": "061ec2b7925621705732b2baf7a62740b40fc8afd541284a6c63509b73d68536",
+    "scripts/verify_fall_v3.py": "ce72429a806cdb21eacd13d3249bc5fb1f4115d8193021a856220dda7b399564",
+    "tests/test_upright_walking.py": "22a0ed85586b5be82f4523fe08e8cfc3adfae149f5f1cc345b24401ef6f4f144",
+    "docs/FALL_ROBUST_V3.md": "58752f64491f8dca95ac88a2dd4f8eaa0370fb768db5f3dff544597c0a984e23",
+    "README.md": "df4c8b58af67284838b7391cb007a2c44b717dc38a74078218a9b38f0370ca4e"
+  }
+}
