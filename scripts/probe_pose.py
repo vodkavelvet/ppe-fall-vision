@@ -37,7 +37,7 @@ def main() -> int:
         device=cfg.pose.device,
         conf=cfg.pose.conf,
         keypoint_conf=cfg.pose.keypoint_conf,
-        imgsz=cfg.pose.imgsz,
+        imgsz=cfg.pose.imgsz, rotations=cfg.pose.rotations, merge_iou=cfg.pose.merge_iou, rotation_conf=cfg.pose.rotation_conf,
     )
     estimator.load()
     print(f"device: {estimator.device}")

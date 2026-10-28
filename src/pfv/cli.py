@@ -326,7 +326,7 @@ def pose(
         device=cfg.pose.device,
         conf=cfg.pose.conf,
         keypoint_conf=cfg.pose.keypoint_conf,
-        imgsz=cfg.pose.imgsz,
+        imgsz=cfg.pose.imgsz, rotations=cfg.pose.rotations, merge_iou=cfg.pose.merge_iou, rotation_conf=cfg.pose.rotation_conf,
     )
     estimator.load()
     typer.echo(f"pose: {cfg.pose.model} di {estimator.device}")
@@ -437,7 +437,7 @@ def track(
     t = cfg.tracking
     estimator = YoloPoseEstimator(
         model=cfg.pose.model, models_dir=cfg.pose.models_dir, device=cfg.pose.device,
-        conf=cfg.pose.conf, keypoint_conf=cfg.pose.keypoint_conf, imgsz=cfg.pose.imgsz,
+        conf=cfg.pose.conf, keypoint_conf=cfg.pose.keypoint_conf, imgsz=cfg.pose.imgsz, rotations=cfg.pose.rotations, merge_iou=cfg.pose.merge_iou, rotation_conf=cfg.pose.rotation_conf,
     )
     estimator.load()
     tracker = PersonTracker(
@@ -544,7 +544,7 @@ def features(
 
     estimator = YoloPoseEstimator(
         model=cfg.pose.model, models_dir=cfg.pose.models_dir, device=cfg.pose.device,
-        conf=cfg.pose.conf, keypoint_conf=cfg.pose.keypoint_conf, imgsz=cfg.pose.imgsz,
+        conf=cfg.pose.conf, keypoint_conf=cfg.pose.keypoint_conf, imgsz=cfg.pose.imgsz, rotations=cfg.pose.rotations, merge_iou=cfg.pose.merge_iou, rotation_conf=cfg.pose.rotation_conf,
     )
     estimator.load()
     t = cfg.tracking
@@ -645,8 +645,8 @@ def fall(
     merah FALLEN, biru RECOVERED. Banner ``FALL DETECTED`` muncul tepat pada
     langkah yang masuk FALLEN dan bertahan selama orang itu masih tergeletak.
 
-    Ambang yang dipakai adalah NILAI AWAL dari subjek latih, bukan hasil tuning
-    akhir. Jangan menyimpulkan akurasi sistem dari satu atau dua klip.
+    Tanpa --config, ambang memakai nilai awal. Profil fall_robust.yaml memakai
+    ambang tuning dan pemeriksaan rotasi V2. Demo satu klip bukan ukuran akurasi.
     """
     from pfv.draw import draw_pose, draw_text
     from pfv.fall import FallMonitor, FallState
@@ -681,7 +681,7 @@ def fall(
 
     estimator = YoloPoseEstimator(
         model=cfg.pose.model, models_dir=cfg.pose.models_dir, device=cfg.pose.device,
-        conf=cfg.pose.conf, keypoint_conf=cfg.pose.keypoint_conf, imgsz=cfg.pose.imgsz,
+        conf=cfg.pose.conf, keypoint_conf=cfg.pose.keypoint_conf, imgsz=cfg.pose.imgsz, rotations=cfg.pose.rotations, merge_iou=cfg.pose.merge_iou, rotation_conf=cfg.pose.rotation_conf,
     )
     estimator.load()
     t = cfg.tracking
@@ -792,7 +792,7 @@ def doctor(
 
     estimator = YoloPoseEstimator(
         model=cfg.pose.model, models_dir=cfg.pose.models_dir, device=cfg.pose.device,
-        conf=cfg.pose.conf, keypoint_conf=cfg.pose.keypoint_conf, imgsz=cfg.pose.imgsz,
+        conf=cfg.pose.conf, keypoint_conf=cfg.pose.keypoint_conf, imgsz=cfg.pose.imgsz, rotations=cfg.pose.rotations, merge_iou=cfg.pose.merge_iou, rotation_conf=cfg.pose.rotation_conf,
     )
     estimator.load()
     is_live = getattr(frames_source, "kind", None) is not None and frames_source.kind.is_live

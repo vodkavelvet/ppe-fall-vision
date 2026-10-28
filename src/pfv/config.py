@@ -177,9 +177,14 @@ class PoseConfig(BaseModel):
     """
 
     imgsz: int = Field(default=640, gt=0)
+    rotations: list[int] = Field(default_factory=list)
+    merge_iou: float = Field(default=0.5, gt=0.0, le=1.0)
+    rotation_conf: float = Field(default=0.5, gt=0.0, le=1.0)
 
     @model_validator(mode="after")
     def _check_device(self) -> "PoseConfig":
+        if any(r not in (-90, 90, 180) for r in self.rotations):
+            raise ValueError("pose.rotations hanya menerima -90, 90, 180")
         allowed = {"auto", "cpu", "mps", "cuda"}
         if self.device.strip().lower() not in allowed:
             raise ValueError(f"pose.device harus salah satu dari {sorted(allowed)}")

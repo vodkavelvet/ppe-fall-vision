@@ -32,11 +32,17 @@ temuan soal indikator anggota badan.
 
 **Task 7a selesai** — `pfv doctor` memeriksa kelayakan sebuah sumber.
 
-**Task 7b: harness dan tuning selesai, evaluasi uji BELUM dijalankan.** Ambang
-dibekukan di `eval/frozen_models.json`, kriteria gerbang di `eval/gate.yaml`.
-Menjalankan `python scripts/evaluate_fall.py` melihat subjek uji (9-10) SEKALI;
-skrip menolak ulangan. **Commit kedua berkas itu lebih dulu**, supaya riwayat git
-membuktikan keduanya ditetapkan sebelum angka uji terlihat.
+**Task 7b: evaluasi V1 selesai — LOLOS.** Subjek uji 9–10: recall mentah
+9/10, recall pada klip yang memenuhi syarat durasi 8/9, alarm palsu 0/10 klip
+ADL, median latensi 3,1 detik. Hasil ada di `eval/test_results.json` dan catatan
+run di `eval/test_runs.jsonl`. Sampelnya 10 jatuh dan 10 ADL, bukan 20 per kelas.
+Berkas beku dan gerbang tetap dipertahankan sebagai bukti versi V1.
+
+**Perbaikan persepsi V2:** profil `config/fall_robust.yaml` menambahkan pemeriksaan
+rotasi dan dukungan lintas orientasi untuk deteksi lemah, serta cache semua
+kandidat sebelum tracking. Launcher webcam/demo memakai profil ini. Ini versi
+pengembangan setelah diagnosis data uji, bukan hasil evaluasi V1. Pemakaian dan
+batasannya ada di [`docs/FALL_ROBUST_V2.md`](docs/FALL_ROBUST_V2.md).
 
 Belum ada PPE dan belum ada validasi lintas-dataset (UR Fall, Multiple Cameras
 Fall); itu Task 8 dan seterusnya.

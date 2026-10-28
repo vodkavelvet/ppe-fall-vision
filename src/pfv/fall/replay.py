@@ -68,15 +68,20 @@ def replay_clip(
 
     for i in range(len(detected)):
         poses: List[PersonPose] = []
-        if detected[i]:
-            poses = [
-                PersonPose(
-                    bbox=tuple(float(v) for v in bboxes[i]),
-                    keypoints=keypoints[i],
-                    confidence=float(confidence[i]),
-                    keypoint_conf=keypoint_conf,
-                )
-            ]
+        if "frame_offsets" in data:
+            start, stop = data["frame_offsets"][i:i + 2]
+            poses = [PersonPose(
+                bbox=tuple(float(v) for v in data["all_bboxes"][j]),
+                keypoints=data["all_keypoints"][j],
+                confidence=float(data["all_confidence"][j]),
+                keypoint_conf=keypoint_conf,
+            ) for j in range(int(start), int(stop))]
+        elif detected[i]:
+            poses = [PersonPose(
+                bbox=tuple(float(v) for v in bboxes[i]),
+                keypoints=keypoints[i], confidence=float(confidence[i]),
+                keypoint_conf=keypoint_conf,
+            )]
         frame = Frame(
             index=i,
             image=blank,

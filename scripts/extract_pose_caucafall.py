@@ -11,10 +11,10 @@ tegak -- kalau itu berlaku umum untuk jatuh ke arah kamera, rasio kotak tidak
 boleh menjadi fitur utama.
 
 **Kedua, menyimpan keypoint ke disk** agar Task 5-7 bisa beriterasi tanpa
-menjalankan ulang inference. Ini versi lokal dan sederhana dari Task 16: satu
-``.npz`` per klip, hanya ORANG TERBAIK per frame. Itu cukup karena audit
-menunjukkan CAUCAFall punya tepat satu orang per frame, tetapi berarti berkas ini
-TIDAK bisa dipakai untuk menguji pertukaran ID antar orang.
+menjalankan ulang inference. Cache schema v2 menyimpan semua kandidat per frame, karena benda seperti kursi
+bisa memperoleh confidence lebih tinggi daripada orang yang tergeletak. Array
+ringkasan V1 tetap tersedia hanya untuk statistik deskriptif lama; replay
+menggunakan array semua deteksi dan tidak membuang kandidat sebelum tracking.
 
 Pemakaian::
 
@@ -41,19 +41,23 @@ from pfv.perception.yolo_pose import YoloPoseEstimator
 
 
 def extract_clip(clip, estimator, resize) -> Dict[str, np.ndarray]:
-    """Jalankan pose atas satu klip, ambil orang dengan confidence tertinggi."""
+    """Simpan SEMUA deteksi (v2); array v1 hanya untuk statistik lama."""
     n = clip.n_frames
     keypoints = np.zeros((n, N_KEYPOINTS, 3), dtype=np.float32)
     bboxes = np.zeros((n, 4), dtype=np.float32)
     confidence = np.zeros(n, dtype=np.float32)
     detected = np.zeros(n, dtype=bool)
     n_people = np.zeros(n, dtype=np.int16)
+    all_poses = []
+    offsets = [0]
 
     with ImageSequenceSource(clip.image_paths, fps=NATIVE_FPS, resize=resize) as src:
         for frame in src:
             poses = estimator.estimate(frame.image)
             i = frame.index
             n_people[i] = len(poses)
+            all_poses.extend(poses)
+            offsets.append(len(all_poses))
             if not poses:
                 continue
             best = max(poses, key=lambda p: p.confidence)
@@ -63,6 +67,17 @@ def extract_clip(clip, estimator, resize) -> Dict[str, np.ndarray]:
             detected[i] = True
 
     return {
+        "schema_version": np.array(2),
+        "pose_model": np.array(estimator.model_name),
+        "pose_conf": np.array(estimator.conf),
+        "pose_imgsz": np.array(estimator.imgsz),
+        "pose_rotations": np.asarray(estimator.rotations, dtype=np.int16),
+        "pose_merge_iou": np.array(estimator.merge_iou),
+        "pose_rotation_conf": np.array(estimator.rotation_conf),
+        "frame_offsets": np.asarray(offsets, dtype=np.int64),
+        "all_keypoints": np.asarray([p.keypoints for p in all_poses], dtype=np.float32).reshape(-1, N_KEYPOINTS, 3),
+        "all_bboxes": np.asarray([p.bbox for p in all_poses], dtype=np.float32).reshape(-1, 4),
+        "all_confidence": np.asarray([p.confidence for p in all_poses], dtype=np.float32),
         "keypoints": keypoints,
         "bboxes": bboxes,
         "confidence": confidence,
@@ -75,19 +90,25 @@ def extract_clip(clip, estimator, resize) -> Dict[str, np.ndarray]:
 def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("root", type=Path)
-    parser.add_argument("--out", type=Path, default=Path("data/interim/caucafall/pose"))
+    parser.add_argument("--out", type=Path, default=None)
+    parser.add_argument("--config", type=Path, default=None)
     parser.add_argument("--limit", type=int, default=None, help="batasi jumlah klip")
     parser.add_argument("--skip-existing", action="store_true")
     args = parser.parse_args(argv)
 
-    cfg = load_config()
+    cfg = load_config(args.config)
+    if args.out is None:
+        args.out = Path("data/interim/caucafall/pose_v2" if cfg.pose.rotations
+                        else "data/interim/caucafall/pose")
+    if cfg.pose.rotations and args.out.resolve() == Path("data/interim/caucafall/pose").resolve():
+        parser.error("Profil rotasi harus memakai --out berbeda dari cache V1.")
     estimator = YoloPoseEstimator(
         model=cfg.pose.model,
         models_dir=cfg.pose.models_dir,
         device=cfg.pose.device,
         conf=cfg.pose.conf,
         keypoint_conf=cfg.pose.keypoint_conf,
-        imgsz=cfg.pose.imgsz,
+        imgsz=cfg.pose.imgsz, rotations=cfg.pose.rotations, merge_iou=cfg.pose.merge_iou, rotation_conf=cfg.pose.rotation_conf,
     )
     estimator.load()
     print(f"device: {estimator.device} | bobot: {estimator.weights_path}")
