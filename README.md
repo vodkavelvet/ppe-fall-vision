@@ -20,7 +20,7 @@ waktu (`pfv track`). Ambang pencocokan 0,95 dipilih dari pengukuran atas 100 kli
 lihat `data/DATASETS.md`. Pertukaran ID antar orang belum teruji pada data nyata.
 
 **Task 5 selesai** — fitur deteksi jatuh sebagai fungsi murni (`pfv features`).
-Tujuh fitur per frame dan tiga fitur temporal, semuanya mengembalikan `None` bila
+Tujuh fitur awal per frame dan tiga fitur temporal, semuanya mengembalikan `None` bila
 data tidak memadai. Daya pisah dan ketersediaan tiap fitur sudah diukur per
 subjek; lihat `data/DATASETS.md`.
 
@@ -40,9 +40,26 @@ Berkas beku dan gerbang tetap dipertahankan sebagai bukti versi V1.
 
 **Perbaikan persepsi V2:** profil `config/fall_robust.yaml` menambahkan pemeriksaan
 rotasi dan dukungan lintas orientasi untuk deteksi lemah, serta cache semua
-kandidat sebelum tracking. Launcher webcam/demo memakai profil ini. Ini versi
+kandidat sebelum tracking. Profil ini dipertahankan untuk pembandingan V2. Ini versi
 pengembangan setelah diagnosis data uji, bukan hasil evaluasi V1. Pemakaian dan
 batasannya ada di [`docs/FALL_ROBUST_V2.md`](docs/FALL_ROBUST_V2.md).
+
+**Perbaikan V3 (pengembangan):** cek kaki tertekuk dan tubuh tegak membatasi
+bukti trunk pendek; alarm baru memerlukan frame tergeletak saat itu. Launcher
+memakai `config/fall_robust_v3.yaml`. Pemicu FALLING dari kecepatan saja
+dinonaktifkan dan Subject 8 Walk tetap UPRIGHT pada seluruh frame yang diperiksa.
+Rincian implementasi: [`docs/FALL_ROBUST_V3.md`](docs/FALL_ROBUST_V3.md).
+
+**Audit penuh Subject 1–10:** inference baru pada 100 klip (19.999 frame)
+menghasilkan alarm pada **42/50 klip jatuh**, alarm palsu pada **1/50 klip
+aktivitas biasa**, dan status sementara FALLING pada **27/50 klip aktivitas
+biasa**. Masih ada 8 jatuh terlewat serta alarm ganda pada Subject 8 Fall left.
+Modul belum benar untuk semua kasus. Ini audit pengembangan pada data yang sudah
+dilihat, bukan test independen baru; konfigurasi tidak dituning selama audit.
+[Ringkasan per subjek dan batasan](docs/ALL_SUBJECTS_AUDIT.md).
+[Bukti terstruktur dan provenance](eval/development/all_subjects_v3_20261028.json).
+Verifikasi kode terakhir: **574 tes otomatis lolos**.
+
 
 Belum ada PPE dan belum ada validasi lintas-dataset (UR Fall, Multiple Cameras
 Fall); itu Task 8 dan seterusnya.

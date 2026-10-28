@@ -88,6 +88,18 @@ class PostureConfig(BaseModel):
     trunk_length_max: float = Field(default=0.24, gt=0.0)
     """Tergeletak bila nilainya <= ini. Dipakai untuk jatuh searah kamera."""
 
+    seated_spread_y_min: float = Field(default=0.59, gt=0.0)
+    upright_aspect_ratio_min: Optional[float] = Field(default=None, gt=0.0)
+    upright_trunk_angle_max_deg: float = Field(default=30.0, ge=0.0, le=90.0)
+
+    seated_knee_angle_max_deg: Optional[float] = Field(default=None, gt=0.0, lt=180.0)
+    """V3: bent knees plus vertical spread invalidate short-trunk evidence.
+    None retains V1/V2.
+
+    Direct lying evidence (trunk angle or spread) remains eligible. This
+    projected angle is a heuristic, not a universal sitting classifier.
+    """
+
     min_orientation_votes: int = Field(default=1, ge=1, le=3)
     """Dari tiga indikator orientasi (sudut, sebaran, panjang trunk)."""
 
@@ -108,6 +120,9 @@ class TimingConfig(BaseModel):
     """Parameter waktu state machine, dalam DETIK (bukan frame)."""
 
     model_config = ConfigDict(extra="forbid")
+
+    require_current_lying_for_alert: bool = False
+    """V3 requires a current LYING frame before emitting a new fall alert."""
 
     persistence_s: float = Field(default=3.0, gt=0)
     """Orang harus tetap tergeletak selama ini sebelum alert. Peredam false positive

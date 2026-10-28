@@ -1,0 +1,1373 @@
+{
+  "current_perception": {
+    "v2": {
+      "detected_falls": 12,
+      "falls": 13,
+      "false_alarm_clips": [
+        "s04_sit_down",
+        "s08_walk"
+      ],
+      "negative_clips": 17,
+      "eligible_falls": 11,
+      "detected_eligible_falls": 11
+    },
+    "v3": {
+      "detected_falls": 12,
+      "falls": 13,
+      "false_alarm_clips": [],
+      "negative_clips": 17,
+      "eligible_falls": 11,
+      "detected_eligible_falls": 11
+    },
+    "lost_falls": [],
+    "gained_falls": [],
+    "clips": [
+      {
+        "clip": "s01_fall_left",
+        "subject": 1,
+        "is_fall": true,
+        "lying_s": 2.15,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s01_kneel",
+        "subject": 1,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s01_pick_up_object",
+        "subject": 1,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s01_sit_down",
+        "subject": 1,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s04_kneel",
+        "subject": 4,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s04_pick_up_object",
+        "subject": 4,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s04_sit_down",
+        "subject": 4,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": true,
+        "v3_alert": false,
+        "v2_alert_s": 8.25,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s05_fall_forward",
+        "subject": 5,
+        "is_fall": true,
+        "lying_s": 7.15,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 6.2,
+        "v3_alert_s": 6.5
+      },
+      {
+        "clip": "s07_fall_forward",
+        "subject": 7,
+        "is_fall": true,
+        "lying_s": 6.0,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 5.65,
+        "v3_alert_s": 5.75
+      },
+      {
+        "clip": "s08_walk",
+        "subject": 8,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": true,
+        "v3_alert": false,
+        "v2_alert_s": 3.0,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s09_fall_backwards",
+        "subject": 9,
+        "is_fall": true,
+        "lying_s": 9.4,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 5.4,
+        "v3_alert_s": 5.4
+      },
+      {
+        "clip": "s09_fall_forward",
+        "subject": 9,
+        "is_fall": true,
+        "lying_s": 2.35,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 6.4,
+        "v3_alert_s": 6.75
+      },
+      {
+        "clip": "s09_fall_left",
+        "subject": 9,
+        "is_fall": true,
+        "lying_s": 7.65,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 6.05,
+        "v3_alert_s": 6.25
+      },
+      {
+        "clip": "s09_fall_right",
+        "subject": 9,
+        "is_fall": true,
+        "lying_s": 6.65,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 5.4,
+        "v3_alert_s": 5.4
+      },
+      {
+        "clip": "s09_fall_sitting",
+        "subject": 9,
+        "is_fall": true,
+        "lying_s": 6.4,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 7.3,
+        "v3_alert_s": 7.3
+      },
+      {
+        "clip": "s09_hop",
+        "subject": 9,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s09_kneel",
+        "subject": 9,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s09_pick_up_object",
+        "subject": 9,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s09_sit_down",
+        "subject": 9,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s09_walk",
+        "subject": 9,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s10_fall_backwards",
+        "subject": 10,
+        "is_fall": true,
+        "lying_s": 9.85,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 6.9,
+        "v3_alert_s": 6.9
+      },
+      {
+        "clip": "s10_fall_forward",
+        "subject": 10,
+        "is_fall": true,
+        "lying_s": 9.55,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 11.8,
+        "v3_alert_s": 11.8
+      },
+      {
+        "clip": "s10_fall_left",
+        "subject": 10,
+        "is_fall": true,
+        "lying_s": 8.15,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 5.5,
+        "v3_alert_s": 5.5
+      },
+      {
+        "clip": "s10_fall_right",
+        "subject": 10,
+        "is_fall": true,
+        "lying_s": 6.45,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 6.15,
+        "v3_alert_s": 6.15
+      },
+      {
+        "clip": "s10_fall_sitting",
+        "subject": 10,
+        "is_fall": true,
+        "lying_s": 10.65,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 9.3,
+        "v3_alert_s": 9.3
+      },
+      {
+        "clip": "s10_hop",
+        "subject": 10,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s10_kneel",
+        "subject": 10,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s10_pick_up_object",
+        "subject": 10,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s10_sit_down",
+        "subject": 10,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s10_walk",
+        "subject": 10,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      }
+    ]
+  },
+  "legacy_perception_100": {
+    "v2": {
+      "detected_falls": 43,
+      "falls": 50,
+      "false_alarm_clips": [
+        "s04_sit_down",
+        "s08_walk"
+      ],
+      "negative_clips": 50,
+      "eligible_falls": 44,
+      "detected_eligible_falls": 39
+    },
+    "v3": {
+      "detected_falls": 41,
+      "falls": 50,
+      "false_alarm_clips": [],
+      "negative_clips": 50,
+      "eligible_falls": 44,
+      "detected_eligible_falls": 38
+    },
+    "lost_falls": [
+      "s01_fall_left",
+      "s05_fall_forward"
+    ],
+    "gained_falls": [],
+    "clips": [
+      {
+        "clip": "s01_fall_backwards",
+        "subject": 1,
+        "is_fall": true,
+        "lying_s": 3.4,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 6.15,
+        "v3_alert_s": 6.15
+      },
+      {
+        "clip": "s01_fall_forward",
+        "subject": 1,
+        "is_fall": true,
+        "lying_s": 3.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s01_fall_left",
+        "subject": 1,
+        "is_fall": true,
+        "lying_s": 2.15,
+        "v2_alert": true,
+        "v3_alert": false,
+        "v2_alert_s": 4.05,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s01_fall_right",
+        "subject": 1,
+        "is_fall": true,
+        "lying_s": 2.95,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 5.7,
+        "v3_alert_s": 5.7
+      },
+      {
+        "clip": "s01_fall_sitting",
+        "subject": 1,
+        "is_fall": true,
+        "lying_s": 4.25,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 7.8,
+        "v3_alert_s": 7.8
+      },
+      {
+        "clip": "s01_hop",
+        "subject": 1,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s01_kneel",
+        "subject": 1,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s01_pick_up_object",
+        "subject": 1,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s01_sit_down",
+        "subject": 1,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s01_walk",
+        "subject": 1,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s02_fall_backwards",
+        "subject": 2,
+        "is_fall": true,
+        "lying_s": 2.9,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s02_fall_forward",
+        "subject": 2,
+        "is_fall": true,
+        "lying_s": 4.15,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 3.65,
+        "v3_alert_s": 3.65
+      },
+      {
+        "clip": "s02_fall_left",
+        "subject": 2,
+        "is_fall": true,
+        "lying_s": 3.9,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 4.0,
+        "v3_alert_s": 4.0
+      },
+      {
+        "clip": "s02_fall_right",
+        "subject": 2,
+        "is_fall": true,
+        "lying_s": 5.7,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 4.5,
+        "v3_alert_s": 4.5
+      },
+      {
+        "clip": "s02_fall_sitting",
+        "subject": 2,
+        "is_fall": true,
+        "lying_s": 3.85,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 6.4,
+        "v3_alert_s": 6.4
+      },
+      {
+        "clip": "s02_hop",
+        "subject": 2,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s02_kneel",
+        "subject": 2,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s02_pick_up_object",
+        "subject": 2,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s02_sit_down",
+        "subject": 2,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s02_walk",
+        "subject": 2,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s03_fall_backwards",
+        "subject": 3,
+        "is_fall": true,
+        "lying_s": 5.0,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 6.4,
+        "v3_alert_s": 7.25
+      },
+      {
+        "clip": "s03_fall_forward",
+        "subject": 3,
+        "is_fall": true,
+        "lying_s": 3.5,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 7.25,
+        "v3_alert_s": 7.35
+      },
+      {
+        "clip": "s03_fall_left",
+        "subject": 3,
+        "is_fall": true,
+        "lying_s": 3.5,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s03_fall_right",
+        "subject": 3,
+        "is_fall": true,
+        "lying_s": 8.4,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 5.9,
+        "v3_alert_s": 5.9
+      },
+      {
+        "clip": "s03_fall_sitting",
+        "subject": 3,
+        "is_fall": true,
+        "lying_s": 7.6,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 7.75,
+        "v3_alert_s": 6.95
+      },
+      {
+        "clip": "s03_hop",
+        "subject": 3,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s03_kneel",
+        "subject": 3,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s03_pick_up_object",
+        "subject": 3,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s03_sit_down",
+        "subject": 3,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s03_walk",
+        "subject": 3,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s04_fall_backwards",
+        "subject": 4,
+        "is_fall": true,
+        "lying_s": 6.15,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s04_fall_forward",
+        "subject": 4,
+        "is_fall": true,
+        "lying_s": 7.2,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 4.05,
+        "v3_alert_s": 4.05
+      },
+      {
+        "clip": "s04_fall_left",
+        "subject": 4,
+        "is_fall": true,
+        "lying_s": 5.1,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 5.9,
+        "v3_alert_s": 5.9
+      },
+      {
+        "clip": "s04_fall_right",
+        "subject": 4,
+        "is_fall": true,
+        "lying_s": 5.2,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 4.9,
+        "v3_alert_s": 4.9
+      },
+      {
+        "clip": "s04_fall_sitting",
+        "subject": 4,
+        "is_fall": true,
+        "lying_s": 6.9,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s04_hop",
+        "subject": 4,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s04_kneel",
+        "subject": 4,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s04_pick_up_object",
+        "subject": 4,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s04_sit_down",
+        "subject": 4,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": true,
+        "v3_alert": false,
+        "v2_alert_s": 8.8,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s04_walk",
+        "subject": 4,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s05_fall_backwards",
+        "subject": 5,
+        "is_fall": true,
+        "lying_s": 8.35,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 4.65,
+        "v3_alert_s": 4.65
+      },
+      {
+        "clip": "s05_fall_forward",
+        "subject": 5,
+        "is_fall": true,
+        "lying_s": 7.15,
+        "v2_alert": true,
+        "v3_alert": false,
+        "v2_alert_s": 6.0,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s05_fall_left",
+        "subject": 5,
+        "is_fall": true,
+        "lying_s": 8.6,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 5.7,
+        "v3_alert_s": 5.7
+      },
+      {
+        "clip": "s05_fall_right",
+        "subject": 5,
+        "is_fall": true,
+        "lying_s": 7.25,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 6.45,
+        "v3_alert_s": 6.45
+      },
+      {
+        "clip": "s05_fall_sitting",
+        "subject": 5,
+        "is_fall": true,
+        "lying_s": 8.05,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 5.95,
+        "v3_alert_s": 5.95
+      },
+      {
+        "clip": "s05_hop",
+        "subject": 5,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s05_kneel",
+        "subject": 5,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s05_pick_up_object",
+        "subject": 5,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s05_sit_down",
+        "subject": 5,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s05_walk",
+        "subject": 5,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s06_fall_backwards",
+        "subject": 6,
+        "is_fall": true,
+        "lying_s": 8.3,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 7.25,
+        "v3_alert_s": 7.5
+      },
+      {
+        "clip": "s06_fall_forward",
+        "subject": 6,
+        "is_fall": true,
+        "lying_s": 6.0,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 5.05,
+        "v3_alert_s": 5.55
+      },
+      {
+        "clip": "s06_fall_left",
+        "subject": 6,
+        "is_fall": true,
+        "lying_s": 8.95,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 3.8,
+        "v3_alert_s": 4.45
+      },
+      {
+        "clip": "s06_fall_right",
+        "subject": 6,
+        "is_fall": true,
+        "lying_s": 7.45,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 6.3,
+        "v3_alert_s": 6.3
+      },
+      {
+        "clip": "s06_fall_sitting",
+        "subject": 6,
+        "is_fall": true,
+        "lying_s": 7.1,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 4.8,
+        "v3_alert_s": 5.55
+      },
+      {
+        "clip": "s06_hop",
+        "subject": 6,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s06_kneel",
+        "subject": 6,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s06_pick_up_object",
+        "subject": 6,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s06_sit_down",
+        "subject": 6,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s06_walk",
+        "subject": 6,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s07_fall_backwards",
+        "subject": 7,
+        "is_fall": true,
+        "lying_s": 8.05,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 7.4,
+        "v3_alert_s": 7.4
+      },
+      {
+        "clip": "s07_fall_forward",
+        "subject": 7,
+        "is_fall": true,
+        "lying_s": 6.0,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 5.65,
+        "v3_alert_s": 5.75
+      },
+      {
+        "clip": "s07_fall_left",
+        "subject": 7,
+        "is_fall": true,
+        "lying_s": 7.0,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 6.0,
+        "v3_alert_s": 6.0
+      },
+      {
+        "clip": "s07_fall_right",
+        "subject": 7,
+        "is_fall": true,
+        "lying_s": 6.05,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 5.2,
+        "v3_alert_s": 5.2
+      },
+      {
+        "clip": "s07_fall_sitting",
+        "subject": 7,
+        "is_fall": true,
+        "lying_s": 8.05,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 5.55,
+        "v3_alert_s": 5.55
+      },
+      {
+        "clip": "s07_hop",
+        "subject": 7,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s07_kneel",
+        "subject": 7,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s07_pick_up_object",
+        "subject": 7,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s07_sit_down",
+        "subject": 7,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s07_walk",
+        "subject": 7,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s08_fall_backwards",
+        "subject": 8,
+        "is_fall": true,
+        "lying_s": 7.45,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 6.1,
+        "v3_alert_s": 6.1
+      },
+      {
+        "clip": "s08_fall_forward",
+        "subject": 8,
+        "is_fall": true,
+        "lying_s": 4.15,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s08_fall_left",
+        "subject": 8,
+        "is_fall": true,
+        "lying_s": 7.3,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 4.3,
+        "v3_alert_s": 4.3
+      },
+      {
+        "clip": "s08_fall_right",
+        "subject": 8,
+        "is_fall": true,
+        "lying_s": 8.55,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 3.45,
+        "v3_alert_s": 4.2
+      },
+      {
+        "clip": "s08_fall_sitting",
+        "subject": 8,
+        "is_fall": true,
+        "lying_s": 7.75,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 3.05,
+        "v3_alert_s": 4.65
+      },
+      {
+        "clip": "s08_hop",
+        "subject": 8,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s08_kneel",
+        "subject": 8,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s08_pick_up_object",
+        "subject": 8,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s08_sit_down",
+        "subject": 8,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s08_walk",
+        "subject": 8,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": true,
+        "v3_alert": false,
+        "v2_alert_s": 3.0,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s09_fall_backwards",
+        "subject": 9,
+        "is_fall": true,
+        "lying_s": 9.4,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 5.4,
+        "v3_alert_s": 5.4
+      },
+      {
+        "clip": "s09_fall_forward",
+        "subject": 9,
+        "is_fall": true,
+        "lying_s": 2.35,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 5.9,
+        "v3_alert_s": 5.9
+      },
+      {
+        "clip": "s09_fall_left",
+        "subject": 9,
+        "is_fall": true,
+        "lying_s": 7.65,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 6.05,
+        "v3_alert_s": 6.25
+      },
+      {
+        "clip": "s09_fall_right",
+        "subject": 9,
+        "is_fall": true,
+        "lying_s": 6.65,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 5.4,
+        "v3_alert_s": 5.4
+      },
+      {
+        "clip": "s09_fall_sitting",
+        "subject": 9,
+        "is_fall": true,
+        "lying_s": 6.4,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s09_hop",
+        "subject": 9,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s09_kneel",
+        "subject": 9,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s09_pick_up_object",
+        "subject": 9,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s09_sit_down",
+        "subject": 9,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s09_walk",
+        "subject": 9,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s10_fall_backwards",
+        "subject": 10,
+        "is_fall": true,
+        "lying_s": 9.85,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 6.9,
+        "v3_alert_s": 6.9
+      },
+      {
+        "clip": "s10_fall_forward",
+        "subject": 10,
+        "is_fall": true,
+        "lying_s": 9.55,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 11.8,
+        "v3_alert_s": 11.8
+      },
+      {
+        "clip": "s10_fall_left",
+        "subject": 10,
+        "is_fall": true,
+        "lying_s": 8.15,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 7.7,
+        "v3_alert_s": 7.7
+      },
+      {
+        "clip": "s10_fall_right",
+        "subject": 10,
+        "is_fall": true,
+        "lying_s": 6.45,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 6.7,
+        "v3_alert_s": 6.7
+      },
+      {
+        "clip": "s10_fall_sitting",
+        "subject": 10,
+        "is_fall": true,
+        "lying_s": 10.65,
+        "v2_alert": true,
+        "v3_alert": true,
+        "v2_alert_s": 9.25,
+        "v3_alert_s": 9.25
+      },
+      {
+        "clip": "s10_hop",
+        "subject": 10,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s10_kneel",
+        "subject": 10,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s10_pick_up_object",
+        "subject": 10,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s10_sit_down",
+        "subject": 10,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      },
+      {
+        "clip": "s10_walk",
+        "subject": 10,
+        "is_fall": false,
+        "lying_s": 0.0,
+        "v2_alert": false,
+        "v3_alert": false,
+        "v2_alert_s": null,
+        "v3_alert_s": null
+      }
+    ]
+  },
+  "protocol": {
+    "date": "2026-10-28",
+    "kind": "development regression on already-seen clips",
+    "independent_test": false,
+    "current_cache": "data/interim/caucafall/pose_v3_regression",
+    "code_sha256": {
+      "src/pfv/fall/features.py": "05e89e220563059c55a091eb2472bc9e24f0f7406f91025829f7bf338d0c12b1",
+      "src/pfv/fall/posture.py": "ad1cb5adb8402a72be98a3453b333cc378567cbabac8b0893934dc64521ca5ed",
+      "src/pfv/fall/state_machine.py": "e9dc463674b544ace96549144965a2319f64a2cacce37135e861db15dab6dcac",
+      "src/pfv/config.py": "1fc7a4445e7e6973e6f73c0b00cb3de962232d716813e7e93012ff3b4af5221a",
+      "src/pfv/cli.py": "f69e3db28cdd3dd6991fa8c5196e3c018dbd80d0418c3c2837ffd07d3b6a5d67",
+      "scripts/measure_availability.py": "c4f997535678ab83faec457cd6e7ecd542d32527408a80f4bf47444458c9bf8d",
+      "scripts/verify_fall_v3.py": "5e65ddce6bcd8d421e6f69e4263b9ff858d0aef0db6f7293e63a62a25ce8a76e",
+      "tests/test_fall_features.py": "d05bcb08a3914ed0b752aac0cecacb3d7f07d97ebc7af847f3b41b96da83c7c3",
+      "tests/test_seated_posture.py": "27e3767fabbb24236db77d9ce4a168e0f22f669f60bfc1747db804be7fcca34c"
+    },
+    "config_sha256": "a71d57191e2c64c9f3fa32b81314c691d6ae591e8d8cf14f3e13fb41e4e44283"
+  }
+}

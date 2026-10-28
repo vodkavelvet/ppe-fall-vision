@@ -341,7 +341,7 @@ class TestNormalisationChoice:
 class TestComputeStatic:
     def test_all_fields_present_for_complete_pose(self) -> None:
         feats = compute_static(standing())
-        assert feats.n_available == 7
+        assert feats.n_available == 8
         assert all(v is not None for v in feats.as_dict().values())
 
     def test_never_raises_on_empty_pose(self) -> None:
@@ -500,7 +500,7 @@ class TestFallFeatures:
         merged = combined.as_dict()
         assert "trunk_angle_deg" in merged
         assert "hip_velocity_norm" in merged
-        assert len(merged) == 10
+        assert len(merged) == 11
 
 
 class TestDocumentedComplementarity:

@@ -208,6 +208,34 @@ def keypoint_spread_y_norm(pose: PersonPose) -> Optional[float]:
     return float(ys.max() - ys.min()) / diag
 
 
+def max_knee_angle_deg(pose: PersonPose) -> Optional[float]:
+    """Maximum projected knee angle, requiring BOTH complete legs.
+
+    Straight legs approach 180 degrees, bent knees approach 90. Missing or
+    coincident joints return None; one observed bent leg cannot establish that
+    both legs are bent. This is auxiliary evidence against a short-trunk cue,
+    never a standalone sitting or fall classifier.
+    """
+    angles = []
+    for hip, knee, ankle in (
+        (Keypoint.LEFT_HIP, Keypoint.LEFT_KNEE, Keypoint.LEFT_ANKLE),
+        (Keypoint.RIGHT_HIP, Keypoint.RIGHT_KNEE, Keypoint.RIGHT_ANKLE),
+    ):
+        points = [pose.keypoint(i) for i in (hip, knee, ankle)]
+        if any(p is None for p in points):
+            return None
+        a, b, c = (np.asarray(p, dtype=np.float64) for p in points)
+        u, v = a - b, c - b
+        denom = float(np.linalg.norm(u) * np.linalg.norm(v))
+        if denom <= 1e-9 or not math.isfinite(denom):
+            return None
+        cosine = float(np.dot(u, v) / denom)
+        if not math.isfinite(cosine):
+            return None
+        angles.append(math.degrees(math.acos(float(np.clip(cosine, -1.0, 1.0)))))
+    return max(angles)
+
+
 # ------------------------------------------------------------- fitur temporal
 
 
@@ -242,6 +270,7 @@ class StaticFeatures:
     hip_ankle_dy_norm: Optional[float] = None
     head_hip_dy_norm: Optional[float] = None
     keypoint_spread_y_norm: Optional[float] = None
+    max_knee_angle_deg: Optional[float] = None
 
     def as_dict(self) -> Dict[str, Optional[float]]:
         return dict(self.__dict__)
@@ -308,6 +337,7 @@ def compute_static(pose: PersonPose) -> StaticFeatures:
         hip_ankle_dy_norm=hip_ankle_dy_norm(pose),
         head_hip_dy_norm=head_hip_dy_norm(pose),
         keypoint_spread_y_norm=keypoint_spread_y_norm(pose),
+        max_knee_angle_deg=max_knee_angle_deg(pose),
     )
 
 

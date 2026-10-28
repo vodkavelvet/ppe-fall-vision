@@ -13,7 +13,7 @@ echo "Tekan 'q' untuk keluar"
 echo ""
 
 cd -- "$(dirname -- "$0")"
-.venv/bin/pfv fall --config config/fall_robust.yaml --source "Dataset CAUCAFall/CAUCAFall/Subject.1/Fall backwards/FallBackwardsS1.avi"
+.venv/bin/pfv fall --config config/fall_robust_v3.yaml --source "Dataset CAUCAFall/CAUCAFall/Subject.1/Fall backwards/FallBackwardsS1.avi"
 
 echo ""
 echo "Sistem dimatikan. Terima kasih!"

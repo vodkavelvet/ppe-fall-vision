@@ -99,6 +99,23 @@ def classify_posture(features: StaticFeatures, cfg: PostureConfig) -> PostureRes
         "hip_knee": _vote(features.hip_knee_dy_norm, cfg.hip_knee_dy_max, False),
     }
 
+    # A short projected trunk is weak evidence: sitting and walking can also
+    # shorten it. In V3, a vertically extended skeleton plus either bilateral
+    # bent knees or a tall upright box invalidates only this weak cue.
+    # Direct trunk-angle/spread evidence still permits a bent-leg fall.
+    seated = (cfg.seated_knee_angle_max_deg is not None
+              and features.max_knee_angle_deg is not None
+              and features.max_knee_angle_deg <= cfg.seated_knee_angle_max_deg)
+    upright = (cfg.upright_aspect_ratio_min is not None
+               and features.bbox_aspect_ratio is not None
+               and features.bbox_aspect_ratio >= cfg.upright_aspect_ratio_min
+               and features.trunk_angle_deg is not None
+               and features.trunk_angle_deg <= cfg.upright_trunk_angle_max_deg)
+    if (votes["trunk_length"] is True and (seated or upright)
+            and features.keypoint_spread_y_norm is not None
+            and features.keypoint_spread_y_norm >= cfg.seated_spread_y_min):
+        votes["trunk_length"] = False
+
     o_avail, o_votes = _count(votes, ORIENTATION_INDICATORS)
     l_avail, l_votes = _count(votes, LIMB_INDICATORS)
     n_available = o_avail + l_avail

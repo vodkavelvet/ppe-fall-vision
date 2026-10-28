@@ -518,6 +518,9 @@ def features(
     from pfv.perception.yolo_pose import YoloPoseEstimator
     from pfv.tracking import PersonTracker
 
+    from dataclasses import fields
+    from pfv.fall.features import StaticFeatures
+
     cfg = load_config(config, **{"video.source": source})
     flags: Optional[list] = None
     try:
@@ -566,6 +569,7 @@ def features(
         ("hip_ankle", "hip_ankle_dy_norm", "{:5.3f}"),
         ("head_hip", "head_hip_dy_norm", "{:5.3f}"),
         ("spread_y", "keypoint_spread_y_norm", "{:5.3f}"),
+        ("knee_max", "max_knee_angle_deg", "{:5.1f}"),
         ("hip_vel", "hip_velocity_norm", "{:+5.2f}"),
         ("angle_rate", "trunk_angle_rate", "{:+5.1f}"),
         ("motion", "motion_energy", "{:5.3f}"),
@@ -582,7 +586,7 @@ def features(
                 temporal = compute_temporal(state, max_gap_s=t.max_gap_s)
                 values = static.as_dict()
                 values.update(temporal.as_dict())
-                if static.n_available == 7:
+                if static.n_available == len(fields(StaticFeatures)):
                     n_complete += 1
 
                 draw_pose(frame.image, person.pose, label=person.label)
@@ -619,7 +623,7 @@ def features(
 
     total = frames_source.frames_yielded
     typer.echo(
-        f"{total} frame | fitur lengkap (7/7): "
+        f"{total} frame | fitur lengkap ({len(fields(StaticFeatures))}/{len(fields(StaticFeatures))}): "
         f"{100.0 * n_complete / total:.0f}%" if total else "0 frame"
     )
     if interrupted:

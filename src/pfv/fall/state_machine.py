@@ -101,6 +101,7 @@ class FallStateMachine:
         self._unknown_since: Optional[float] = None
         self._last_trigger: float = 0.0
         self._last_alert: Optional[float] = None
+        self._last_direct_lying: Optional[float] = None
 
     # ------------------------------------------------------------- publik
 
@@ -121,7 +122,16 @@ class FallStateMachine:
             )
         self._last_t = timestamp_s
 
-        result = self._posture_fn(static, self._posture_cfg)
+        posture_cfg = self._posture_cfg
+        # A real fall can subsequently look tall along the camera axis.
+        # Briefly bridge that ambiguity only after direct lying evidence,
+        # while already FALLING. Cold-start standing/walking gets no bridge.
+        if (posture_cfg.upright_aspect_ratio_min is not None
+                and self.state is FallState.FALLING
+                and self._last_direct_lying is not None
+                and timestamp_s - self._last_direct_lying < self._t.persistence_s):
+            posture_cfg = posture_cfg.model_copy(update={"upright_aspect_ratio_min": None})
+        result = self._posture_fn(static, posture_cfg)
         previous = self.state
         fast = self._is_fast(temporal)
         alert = False
@@ -135,6 +145,11 @@ class FallStateMachine:
             reason = self._step_fallen(timestamp_s, result)
         else:
             reason = self._step_recovered(timestamp_s, result)
+
+        if (result.posture is Posture.LYING
+                and (result.votes.get("trunk_angle") is True
+                     or result.votes.get("keypoint_spread") is True)):
+            self._last_direct_lying = timestamp_s
 
         lying_for = (
             timestamp_s - self._lying_since if self._lying_since is not None else 0.0
@@ -175,6 +190,7 @@ class FallStateMachine:
         self._upright_since = None
 
     def _clear_lying(self) -> None:
+        self._last_direct_lying = None
         self._lying_since = None
         self._n_lying = self._n_upright = self._n_unknown = 0
         self._upright_since = None
@@ -231,6 +247,8 @@ class FallStateMachine:
             lying_fraction = self._n_lying / known if known else 0.0
             known_fraction = known / total if total else 0.0
             if lying_fraction >= tm.min_lying_fraction and known_fraction >= tm.min_known_fraction:
+                if tm.require_current_lying_for_alert and result.posture is not Posture.LYING:
+                    return "awaiting_current_lying", False
                 self._enter(FallState.FALLEN, t)
                 self._upright_since = None
                 if self._cooldown_ok(t):

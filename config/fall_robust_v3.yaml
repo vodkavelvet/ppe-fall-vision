@@ -1,0 +1,59 @@
+# V3 development: rotation inference plus a bent-knee check on short-trunk evidence.
+video:
+  source: '0'
+  frame_skip: 0
+  resize:
+    mode: longest_side
+    longest_side: 960
+    letterbox_size: null
+    allow_upscale: false
+  loop: false
+fall:
+  enabled: true
+  min_fps: 15.0
+  posture:
+    trunk_angle_min_deg: 45.0
+    keypoint_spread_y_max: 0.45
+    hip_ankle_dy_max: 0.34
+    hip_knee_dy_max: 0.12
+    trunk_length_max: 0.28
+    seated_knee_angle_max_deg: 135.0
+    seated_spread_y_min: 0.59
+    upright_aspect_ratio_min: 1.4
+    upright_trunk_angle_max_deg: 45.0
+    min_orientation_votes: 1
+    min_limb_votes: 1
+    min_available_indicators: 3
+  timing:
+    require_current_lying_for_alert: true
+    persistence_s: 3.0
+    min_lying_fraction: 0.7
+    min_known_fraction: 0.5
+    grace_s: 0.5
+    falling_timeout_s: 1.5
+    max_unknown_s: 3.0
+    recover_s: 1.5
+    recovered_hold_s: 1.0
+    cooldown_s: 30.0
+    velocity_window_s: 0.5
+    falling_velocity: null
+pose:
+  model: yolo11n-pose.pt
+  models_dir: models
+  device: auto
+  conf: 0.25
+  keypoint_conf: 0.5
+  imgsz: 640
+  rotations:
+  - -90
+  - 90
+  merge_iou: 0.5
+  rotation_conf: 0.5
+tracking:
+  window_s: 3.0
+  track_activation_threshold: 0.25
+  lost_track_buffer: 30
+  minimum_matching_threshold: 0.95
+  minimum_consecutive_frames: 1
+  prune_after_s: 5.0
+  max_gap_s: 0.2

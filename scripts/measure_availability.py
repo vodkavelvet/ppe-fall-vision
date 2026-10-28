@@ -67,7 +67,7 @@ def main() -> int:
             group = "fallen" if flags[i] else "upright"
             totals[group] += 1
             feats = compute_static(pose)
-            if feats.n_available == len(FEATURES):
+            if all(getattr(feats, name) is not None for name in FEATURES):
                 complete[group] += 1
             for name, value in feats.as_dict().items():
                 if value is not None:
